@@ -148,7 +148,7 @@ class _LoginView extends State<LoginView> {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           homeRoute,
-                          (route) => false,
+                          (route) => true,
                         );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'Wrong-password') {

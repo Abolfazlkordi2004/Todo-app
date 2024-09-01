@@ -9,10 +9,14 @@ Future<void> showErrordialog(BuildContext context, String text) {
         content: Text(text),
         actions: [
           TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Ok'))
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Ok',
+              textAlign: TextAlign.center,
+            ),
+          )
         ],
       );
     },

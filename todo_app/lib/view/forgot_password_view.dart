@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'dart:developer' as devtools show log;
+// import 'dart:developer' as devtools show log;
+import 'package:todo_app/dialogs/error-dialog.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -69,9 +70,13 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                         .sendPasswordResetEmail(email: email);
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'invalid-email') {
-                      devtools.log('Invalid email');
+                      // devtools.log('Invalid email');
+                      // ignore: use_build_context_synchronously
+                      showErrordialog(context, 'Invalid email');
                     } else {
-                      devtools.log('Error ${e.code}');
+                      // devtools.log('Error ${e.code}');
+                      // ignore: use_build_context_synchronously
+                      showErrordialog(context, e.code);
                     }
                   }
                 },

@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'dart:developer' as devtools show log;
+// import 'dart:developer' as devtools show log;
+import 'package:todo_app/dialogs/error-dialog.dart';
 
 class VerfiyEmailView extends StatefulWidget {
   const VerfiyEmailView({super.key});
@@ -46,7 +47,9 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
                       final user = FirebaseAuth.instance.currentUser;
                       await user?.sendEmailVerification();
                     } on FirebaseAuthException catch (e) {
-                      devtools.log('Error ${e.code}');
+                      // devtools.log('Error ${e.code}');
+                      showErrordialog(context, e.code);
+
                     }
                   },
                   style: ElevatedButton.styleFrom(),
@@ -69,7 +72,8 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
                         (route) => false,
                       );
                     } on FirebaseAuthException catch (e) {
-                      devtools.log('Error ${e.code}');
+                      // devtools.log('Error ${e.code}');
+                      showErrordialog(context, e.code);
                     }
                   },
                   child: const Text('restart'),
