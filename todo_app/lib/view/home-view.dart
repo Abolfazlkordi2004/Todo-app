@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/dialogs/logout_dialog.dart';
 
 class Homeview extends StatefulWidget {
   const Homeview({super.key});
@@ -24,7 +28,37 @@ class _Homeview extends State<Homeview> {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
+  Future<void> _onItemTapped(int index) async {
+    // if (!mounted) return;
+
+    switch (index) {
+      case 0:
+        try {
+          bool shouldLogout = await showLogOutDialog(context);
+          if (shouldLogout) {
+            await FirebaseAuth.instance.signOut();
+            // if (!mounted) return; // Guard to check if context is still valid
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              loginRoute,
+              (route) => false,
+            );
+          }
+        } on FirebaseAuthException catch (e) {
+          // if (!mounted) return; // Guard again
+          await showErrordialog(context, e.code);
+        }
+        break;
+
+      case 1:
+        // Simple navigation to the profile route
+        Navigator.of(context).pushNamed(profileRoute);
+        break;
+
+      default:
+        break;
+    }
+
+    // Always update the selected index after the logic is completed
     setState(() {
       _selectedIndex = index;
     });
@@ -47,12 +81,12 @@ class _Homeview extends State<Homeview> {
                 decoration: InputDecoration(
                   hintText: 'Search here ...',
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(20),
                     borderSide:
                         const BorderSide(color: Colors.black, width: 1.5),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(20),
                     borderSide:
                         const BorderSide(color: Colors.black, width: 1.5),
                   ),
@@ -74,16 +108,12 @@ class _Homeview extends State<Homeview> {
             label: 'Logout',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add Task',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.deepPurple,
         unselectedItemColor: Colors.grey.shade600,
         iconSize: 28,
         selectedFontSize: 15,
@@ -92,6 +122,11 @@ class _Homeview extends State<Homeview> {
         backgroundColor: Colors.white,
         onTap: _onItemTapped,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

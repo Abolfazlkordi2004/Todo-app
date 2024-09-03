@@ -188,6 +188,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     child: const Text(
                       'Register',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),

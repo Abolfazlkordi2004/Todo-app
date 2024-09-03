@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/test.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
 import 'package:todo_app/view/home-view.dart';
 import 'package:todo_app/view/login_view.dart';
+import 'package:todo_app/view/profile-view.dart';
 import 'package:todo_app/view/register_view.dart';
 import 'package:todo_app/view/verfiy_email_view.dart';
 
@@ -15,7 +15,7 @@ void main() async {
     MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        useMaterial3: false,
+        useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
       home: const Homeview(),
@@ -25,6 +25,7 @@ void main() async {
         verfiyEmailRoute: (context) => const VerfiyEmailView(),
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
         homeRoute: (context) => const Homeview(),
+        profileRoute: (context) => const Profileview(),
       },
     ),
   );
