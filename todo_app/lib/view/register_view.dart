@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/constant/username.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -18,6 +17,7 @@ class _RegisterViewState extends State<RegisterView> {
   late TextEditingController _password;
 
   bool _passwordVisible = false;
+ 
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 50,
                 ),
                 TextField(
-                  controller: _userName, // Attach controller
+                  controller: _userName,
                   decoration: InputDecoration(
                     labelText: 'Username',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -81,7 +81,7 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 30,
                 ),
                 TextField(
-                  controller: _email, // Attach controller
+                  controller: _email,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -103,7 +103,7 @@ class _RegisterViewState extends State<RegisterView> {
                   height: 30,
                 ),
                 TextField(
-                  controller: _password, // Attach controller
+                  controller: _password,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -132,7 +132,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.visiblePassword,
-                  obscureText: !_passwordVisible, // Hide password
+                  obscureText: !_passwordVisible,
                 ),
                 const SizedBox(
                   height: 50,
@@ -144,36 +144,33 @@ class _RegisterViewState extends State<RegisterView> {
                     onPressed: () async {
                       var email = _email.text.trim();
                       var password = _password.text.trim();
-
+                      userName = _userName.text.trim();
                       try {
-                        final userCredential = await FirebaseAuth.instance
+                        await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                           email: email,
                           password: password,
                         );
 
-                        devtools.log('User registered: ${userCredential.user}');
-
-                        // Navigate to the verification route
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           verfiyEmailRoute,
                           (route) => false,
                         );
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'invalid-email') {
-                          devtools.log('Invalid email');
+                          // devtools.log('Invalid email');
                           showErrordialog(context, 'Invalid email');
                         } else if (e.code == 'email-already-in-use') {
-                          devtools.log('Email already in use');
+                          // devtools.log('Email already in use');
                           showErrordialog(context, 'Email already in use');
                         } else if (e.code == 'weak-password') {
-                          devtools.log('Weak password');
+                          // devtools.log('Weak password');
                           showErrordialog(context, 'Weak password');
                         } else if (e.code == 'username-already-in-use') {
-                          devtools.log('UserName already in use');
+                          // devtools.log('UserName already in use');
                           showErrordialog(context, 'UserName already in use');
                         } else {
-                          devtools.log('Unknown error: ${e.code}');
+                          // devtools.log('Unknown error: ${e.code}');
                           showErrordialog(context, e.code);
                         }
                       }

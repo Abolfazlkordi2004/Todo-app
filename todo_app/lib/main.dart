@@ -18,14 +18,14 @@ void main() async {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Homeview(),
+      home: const LoginView(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         verfiyEmailRoute: (context) => const VerfiyEmailView(),
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
         homeRoute: (context) => const Homeview(),
-        profileRoute: (context) => const Profileview(),
+        profileRoute: (context) => const ProfileView(),
       },
     ),
   );

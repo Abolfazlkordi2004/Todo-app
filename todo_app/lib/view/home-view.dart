@@ -29,7 +29,7 @@ class _Homeview extends State<Homeview> {
   }
 
   Future<void> _onItemTapped(int index) async {
-    // if (!mounted) return;
+    if (!mounted) return;
 
     switch (index) {
       case 0:
@@ -37,20 +37,19 @@ class _Homeview extends State<Homeview> {
           bool shouldLogout = await showLogOutDialog(context);
           if (shouldLogout) {
             await FirebaseAuth.instance.signOut();
-            // if (!mounted) return; // Guard to check if context is still valid
+            if (!mounted) return;
             Navigator.of(context).pushNamedAndRemoveUntil(
               loginRoute,
               (route) => false,
             );
           }
         } on FirebaseAuthException catch (e) {
-          // if (!mounted) return; // Guard again
+          if (!mounted) return;
           await showErrordialog(context, e.code);
         }
         break;
 
       case 1:
-        // Simple navigation to the profile route
         Navigator.of(context).pushNamed(profileRoute);
         break;
 
@@ -58,7 +57,6 @@ class _Homeview extends State<Homeview> {
         break;
     }
 
-    // Always update the selected index after the logic is completed
     setState(() {
       _selectedIndex = index;
     });

@@ -1,8 +1,8 @@
-// import 'dart:developer' as devtools show log;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/constant/username.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -58,6 +58,7 @@ class _LoginView extends State<LoginView> {
                   height: 50,
                 ),
                 TextField(
+                  controller: _userName, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Username',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -79,6 +80,7 @@ class _LoginView extends State<LoginView> {
                   height: 30,
                 ),
                 TextField(
+                  controller: _email, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -100,6 +102,7 @@ class _LoginView extends State<LoginView> {
                   height: 30,
                 ),
                 TextField(
+                  controller: _password, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: const TextStyle(color: Colors.black),
@@ -140,26 +143,25 @@ class _LoginView extends State<LoginView> {
                     onPressed: () async {
                       try {
                         var email = _email.text;
-                        var password = _email.text;
+                        var password = _password.text;
+                        userName = _userName.text;
+
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
                           email: email,
                           password: password,
                         );
-                        // ignore: use_build_context_synchronously
+
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           homeRoute,
                           (route) => true,
                         );
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'Wrong-password') {
-                          // devtools.log('Wronng-password');
-                          showErrordialog(context, 'Wronng-password');
-                        } else if (e.code == 'User-not-found') {
-                          // devtools.log('User not found');
-                          showErrordialog(context, 'User not found');
+                        if (e.code == 'wrong-password') {
+                          await showErrordialog(context, 'Wrong password');
+                        } else if (e.code == 'user-not-found') {
+                          await showErrordialog(context, 'User not found');
                         } else {
-                          // devtools.log('Error ${e.code}');
-                          showErrordialog(context, e.code);
+                          await showErrordialog(context, e.code);
                         }
                       }
                     },
