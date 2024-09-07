@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/constant/username.dart';
+import 'package:todo_app/services/auth/auth_service.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -13,26 +13,16 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final userEmail = user?.email ?? 'No email available';
+    final user = AuthService.firebase().currentUser;
+    final userEmail = user?.email;
     final showUserName = userName;
 
-    if (user == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-          centerTitle: true,
-        ),
-        body: const Center(
-          child: Text('No user is currently logged in.'),
-        ),
-      );
-    }
-
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
+        backgroundColor: Colors.blue.shade100,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,7 +42,8 @@ class _ProfileViewState extends State<ProfileView> {
               Center(
                 child: Text(
                   showUserName,
-                  style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               const SizedBox(height: 50),
@@ -67,6 +58,7 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               const SizedBox(height: 5),
               Container(
+                height: 50,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -79,7 +71,7 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     const Icon(Icons.email),
                     const SizedBox(width: 10),
-                    Text(userEmail),
+                    Text(userEmail!),
                   ],
                 ),
               ),
@@ -95,6 +87,7 @@ class _ProfileViewState extends State<ProfileView> {
               ),
               const SizedBox(height: 5),
               Container(
+                height: 50,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -119,7 +112,10 @@ class _ProfileViewState extends State<ProfileView> {
                   onPressed: () {
                     Navigator.of(context).pushNamed(homeRoute);
                   },
-                  child: const Text('Back to home'),
+                  child: const Text(
+                    'Back to home',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
             ],

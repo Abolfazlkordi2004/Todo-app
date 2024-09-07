@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/dialogs/error-dialog.dart';
 import 'package:todo_app/constant/username.dart';
+import 'package:todo_app/services/auth/auth_exception.dart';
+import 'package:todo_app/services/auth/auth_service.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -37,10 +38,7 @@ class _LoginView extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -48,11 +46,14 @@ class _LoginView extends State<LoginView> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 100,
                 ),
-                const Text(
-                  ' Login into your account',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                Text(
+                  'Sign in',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.blue.shade900),
                 ),
                 const SizedBox(
                   height: 50,
@@ -146,23 +147,19 @@ class _LoginView extends State<LoginView> {
                         var password = _password.text;
                         userName = _userName.text;
 
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
+                        await AuthService.firebase()
+                            .login(email: email, password: password);
 
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           homeRoute,
                           (route) => true,
                         );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'wrong-password') {
-                          await showErrordialog(context, 'Wrong password');
-                        } else if (e.code == 'user-not-found') {
-                          await showErrordialog(context, 'User not found');
-                        } else {
-                          await showErrordialog(context, e.code);
-                        }
+                      } on WrongPasswordAuthException {
+                        showErrordialog(context, 'Wrong password');
+                      } on UserNotFoundAuthException {
+                        showErrordialog(context, 'User not found');
+                      } on GenericAuthExceptions {
+                        showErrordialog(context, 'Unknown error');
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -180,7 +177,7 @@ class _LoginView extends State<LoginView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 TextButton(
                   onPressed: () {

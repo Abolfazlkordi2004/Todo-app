@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-// import 'dart:developer' as devtools show log;
 import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/services/auth/auth_exception.dart';
+// import 'dart:developer' as devtools show log;
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -29,9 +30,11 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Forgot Password'),
         centerTitle: true,
+        backgroundColor: Colors.blue.shade100,
       ),
       body: Center(
         child: Padding(
@@ -68,16 +71,10 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                     var email = _emailController.text;
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: email);
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'invalid-email') {
-                      // devtools.log('Invalid email');
-                      // ignore: use_build_context_synchronously
-                      showErrordialog(context, 'Invalid email');
-                    } else {
-                      // devtools.log('Error ${e.code}');
-                      // ignore: use_build_context_synchronously
-                      showErrordialog(context, e.code);
-                    }
+                  } on InvalidEmailAuthExceptions {
+                    showErrordialog(context, 'Invalid email');
+                  } on GenericAuthExceptions {
+                    showErrordialog(context, 'Unknown error');
                   }
                 },
                 child: const Text(

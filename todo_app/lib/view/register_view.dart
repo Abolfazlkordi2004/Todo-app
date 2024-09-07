@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/dialogs/error-dialog.dart';
 import 'package:todo_app/constant/username.dart';
+import 'package:todo_app/services/auth/auth_exception.dart';
+import 'package:todo_app/services/auth/auth_service.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -17,7 +18,6 @@ class _RegisterViewState extends State<RegisterView> {
   late TextEditingController _password;
 
   bool _passwordVisible = false;
- 
 
   @override
   void initState() {
@@ -38,10 +38,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -49,11 +46,14 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 100,
                 ),
-                const Text(
-                  'Create account',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                Text(
+                  'Sign Up',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.blue.shade900),
                 ),
                 const SizedBox(
                   height: 50,
@@ -146,33 +146,21 @@ class _RegisterViewState extends State<RegisterView> {
                       var password = _password.text.trim();
                       userName = _userName.text.trim();
                       try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-
+                        await AuthService.firebase()
+                            .createUser(email: email, password: password);
+                        await AuthService.firebase().sendEmailVerification();
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           verfiyEmailRoute,
                           (route) => false,
                         );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'invalid-email') {
-                          // devtools.log('Invalid email');
-                          showErrordialog(context, 'Invalid email');
-                        } else if (e.code == 'email-already-in-use') {
-                          // devtools.log('Email already in use');
-                          showErrordialog(context, 'Email already in use');
-                        } else if (e.code == 'weak-password') {
-                          // devtools.log('Weak password');
-                          showErrordialog(context, 'Weak password');
-                        } else if (e.code == 'username-already-in-use') {
-                          // devtools.log('UserName already in use');
-                          showErrordialog(context, 'UserName already in use');
-                        } else {
-                          // devtools.log('Unknown error: ${e.code}');
-                          showErrordialog(context, e.code);
-                        }
+                      } on WeakPasswordAuthExceptions {
+                        showErrordialog(context, 'Weak password');
+                      } on InvalidEmailAuthExceptions {
+                        showErrordialog(context, 'Invalid email');
+                      } on EmailAlreadyInUseAuthExceptions {
+                        showErrordialog(context, 'Email already in use');
+                      } on GenericAuthExceptions {
+                        showErrordialog(context, 'Unknown error');
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -190,7 +178,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 TextButton(
                   onPressed: () {

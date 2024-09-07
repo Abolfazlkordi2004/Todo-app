@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/services/auth/auth_service.dart';
+import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
-import 'package:todo_app/view/home-view.dart';
+import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
 import 'package:todo_app/view/profile-view.dart';
 import 'package:todo_app/view/register_view.dart';
@@ -16,9 +18,10 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue,brightness: Brightness.light)
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginView(),
+      home: const MyApp(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
@@ -26,7 +29,36 @@ void main() async {
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
         homeRoute: (context) => const Homeview(),
         profileRoute: (context) => const ProfileView(),
+        createTaskRoute: (context) => const CreateTaskView(),
       },
     ),
   );
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: AuthService.firebase().initialize(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = AuthService.firebase().currentUser;
+            if (user != null) {
+              if (user.isEmailverified) {
+                return const Homeview();
+              } else {
+                return const VerfiyEmailView();
+              }
+            } else {
+              return const LoginView();
+            }
+
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
 }
