@@ -11,37 +11,105 @@ class CreateTaskView extends StatefulWidget {
 
 class _CreateTaskViewState extends State<CreateTaskView> {
   late TextEditingController _taskController;
+  late TextEditingController _timeController;
+  late TextEditingController _dateContoller;
+
+  DateTime dateNow = DateTime.now();
+  TimeOfDay timeNow = TimeOfDay.now();
+
+  Future<void> selectTime(
+    BuildContext context,
+  ) async {
+    var time = await showTimePicker(
+      context: context,
+      initialTime: timeNow,
+    );
+
+    if (time != null) {
+      _timeController.text = '${time.hour}:${time.minute}';
+      setState(() {});
+    }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    var date = await showDatePicker(
+      context: context,
+      initialDate: dateNow,
+      firstDate: dateNow,
+      lastDate: DateTime(2030),
+    );
+
+    if (date != null) {
+      _dateContoller.text = date.toLocal().toString().split(' ')[0];
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
     _taskController = TextEditingController();
+    _timeController = TextEditingController();
+    _dateContoller = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _taskController.dispose();
+    _timeController.dispose();
+    _dateContoller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Create Task'),
-        centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             children: [
+              const SizedBox(
+                height: 60,
+              ),
+              const Text(
+                'Add new task',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               TextField(
                 controller: _taskController,
+                decoration: const InputDecoration(
+                  hintText: 'Title of Task',
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              TextField(
+                controller: _taskController,
+                decoration: const InputDecoration(
+                  hintText: 'What do you want to do?',
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              TextFormField(
+                controller: _timeController,
                 decoration: InputDecoration(
-                  label: const Text('Add new task'),
+                  hintText: 'Time',
                   labelStyle: const TextStyle(color: Colors.black),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -52,6 +120,40 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                     borderRadius: BorderRadius.circular(10),
                     borderSide:
                         const BorderSide(color: Colors.black, width: 1.5),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      selectTime(
+                        context,
+                      );
+                    },
+                    icon: const Icon(Icons.timer_sharp),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: _dateContoller,
+                decoration: InputDecoration(
+                  hintText: 'Date',
+                  labelStyle: const TextStyle(color: Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: Colors.black, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: Colors.black, width: 1.5),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      selectDate(context);
+                    },
+                    icon: const Icon(Icons.date_range),
                   ),
                 ),
               ),
@@ -74,7 +176,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                         textStyle: const TextStyle(color: Colors.black),
                         shape: RoundedRectangleBorder(
                           side:
-                              const BorderSide(color: Colors.blue, width: 1.5),
+                              const BorderSide(color: Colors.black, width: 1.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -93,7 +195,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                         Navigator.of(context).pushNamed(homeRoute);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade500,
+                        backgroundColor: Colors.black,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           side: const BorderSide(color: Colors.blue, width: 1),

@@ -18,19 +18,13 @@ class _ProfileViewState extends State<ProfileView> {
     final showUserName = userName;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 100),
               Center(
                 child: Image.asset(
                   'assets/images/profile.png',
@@ -38,12 +32,23 @@ class _ProfileViewState extends State<ProfileView> {
                   height: 150,
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(
+                height: 20,
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
+              ),
+              const SizedBox(height: 20),
               Center(
                 child: Text(
                   showUserName,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
               ),
               const SizedBox(height: 50),

@@ -38,7 +38,6 @@ class _LoginView extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -52,7 +51,7 @@ class _LoginView extends State<LoginView> {
                   'Sign in',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 25,
                       color: Colors.blue.shade900),
                 ),
                 const SizedBox(

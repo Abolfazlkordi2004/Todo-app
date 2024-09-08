@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/dialogs/error-dialog.dart';
 import 'package:todo_app/dialogs/logout_dialog.dart';
@@ -10,24 +11,30 @@ class Homeview extends StatefulWidget {
   const Homeview({super.key});
 
   @override
-  State<Homeview> createState() => _Homeview();
+  State<Homeview> createState() => _HomeviewState();
 }
 
-class _Homeview extends State<Homeview> {
-  late TextEditingController _searchBox;
-  // late final TaskListView _listView;
-
+class _HomeviewState extends State<Homeview> {
+  // late TextEditingController _searchBox;
+  late TaskServices _taskServices;
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    _searchBox = TextEditingController();
+    _taskServices = TaskServices();
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        _taskServices
+            .addTasks(['task 1', 'task 2', 'task 3', 'task 4', 'task 5']);
+      },
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-    _searchBox.dispose();
+    _taskServices.dispose();
     super.dispose();
   }
 
@@ -68,57 +75,38 @@ class _Homeview extends State<Homeview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('My Task'),
+        title: const Text(
+          'My Tasks',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
       ),
-      body: StreamBuilder<Object>(
-          stream: null,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-              case ConnectionState.active:
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          TextField(
-                            // controller: _searchBox,
-                            decoration: InputDecoration(
-                              hintText: 'Search here ...',
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 1.5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 1.5),
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.search),
-                              ),
-                            ),
-                            keyboardType: TextInputType.text,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
+      body: StreamBuilder(
+        stream: _taskServices.taskStream,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const LinearProgressIndicator();
+            case ConnectionState.active:
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Error'),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('You do not have any tasks'),
+                );
+              } else {
+                return TaskListView(tasks: snapshot.data!);
+              }
+            default:
+              return const LinearProgressIndicator();
+          }
+        },
+      ),
 
-              default:
-                return const CircularProgressIndicator();
-            }
-          }),
+      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -140,12 +128,11 @@ class _Homeview extends State<Homeview> {
         backgroundColor: Colors.white,
         onTap: _onItemTapped,
       ),
+
+      // FloatingActionButton for adding a new task
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            createTaskRoute,
-            (route) => false,
-          );
+          Navigator.of(context).pushNamed(createTaskRoute);
         },
         backgroundColor: Colors.blue.shade200,
         child: const Icon(Icons.add),

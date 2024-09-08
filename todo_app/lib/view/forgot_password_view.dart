@@ -30,12 +30,6 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Forgot Password'),
-        centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
-      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -43,6 +37,21 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
             children: [
               const SizedBox(
                 height: 30,
+              ),
+              const Text(
+                'Forgot password',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Divider(
+                color: Colors.grey,
+                indent: 10,
+                endIndent: 10,
+              ),
+              const SizedBox(
+                height: 40,
               ),
               TextField(
                 decoration: InputDecoration(
