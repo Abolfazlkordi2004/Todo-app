@@ -7,13 +7,9 @@ class TaskServices {
 
   Stream<List<List<String>>> get taskStream => _taskStreamController.stream;
 
-  int get taskCount => _tasks.length;
-
   void addTask(List<String> task) {
     _tasks.addAll([task]);
     _taskStreamController.add(_tasks);
-    print(_tasks);
-    print(taskCount);
   }
 
   void dispose() {

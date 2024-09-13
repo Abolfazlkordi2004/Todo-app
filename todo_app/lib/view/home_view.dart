@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/dialogs/error_dialog.dart';
 import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/task_list_view.dart';
 
@@ -86,7 +87,11 @@ class _HomeViewState extends State<HomeView> {
       body: StreamBuilder<List<List<String>>>(
         stream: _taskServices.taskStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LinearProgressIndicator();
+          } else if (snapshot.hasError) {
+            showErrordialog(context, 'ERROR');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -102,18 +107,8 @@ class _HomeViewState extends State<HomeView> {
               ),
             );
           }
-
           final tasks = snapshot.data!;
-
           return TaskListView(tasks: tasks);
-          // return ListView.builder(
-          //   itemCount: tasks.length,
-          //   itemBuilder: (context, index) {
-          //     return ListTile(
-          //       title: Text(tasks[index]),
-          //     );
-          //   },
-          // );
         },
       ),
       floatingActionButton: FloatingActionButton(

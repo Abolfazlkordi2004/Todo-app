@@ -16,7 +16,6 @@ class _CreateTaskViewState extends State<CreateTaskView> {
   late TextEditingController _taskController;
   late TextEditingController _timeController;
   late TextEditingController _dateController;
- 
 
   TimeOfDay nowTime = TimeOfDay.now();
   DateTime nowDate = DateTime.now();
@@ -68,7 +67,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     _titleController = TextEditingController();
     _timeController = TextEditingController();
     _dateController = TextEditingController();
- 
+
     super.initState();
   }
 
@@ -112,15 +111,15 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                   ),
                   TextField(
                     controller: _titleController,
-                    decoration: const InputDecoration(hintText: 'Title of task'),
+                    decoration:
+                        const InputDecoration(hintText: 'Title of task'),
                   ),
                   const SizedBox(
                     height: 30,
                   ),
                   TextField(
                     controller: _taskController,
-                    decoration: const InputDecoration(
-                        hintText:'Description'),
+                    decoration: const InputDecoration(hintText: 'Description'),
                   ),
                   const SizedBox(height: 50),
                   TextFormField(
