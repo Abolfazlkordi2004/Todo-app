@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:todo_app/firebase_options.dart';
-import 'package:todo_app/services/auth/auth_provider.dart' as customProvider;
+import 'package:todo_app/services/auth/auth_provider.dart' as customprovider;
 import 'package:todo_app/services/auth/auth_user.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
 
-class FirebaseAuthProvider implements customProvider.AuthProvider {
+class FirebaseAuthProvider implements customprovider.AuthProvider {
   @override
   Future<void> initialize() async {
     await Firebase.initializeApp(

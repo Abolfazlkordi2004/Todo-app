@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/dialogs/error_dialog.dart';
 import 'package:todo_app/constant/username.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
@@ -163,7 +163,7 @@ class _RegisterViewState extends State<RegisterView> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade500,
+                      backgroundColor: Colors.blue.shade800,
                       textStyle: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 15),
                       shape: RoundedRectangleBorder(

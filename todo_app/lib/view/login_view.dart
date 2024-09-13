@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/dialogs/error-dialog.dart';
+import 'package:todo_app/dialogs/error_dialog.dart';
 import 'package:todo_app/constant/username.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
@@ -149,20 +149,24 @@ class _LoginView extends State<LoginView> {
                         await AuthService.firebase()
                             .login(email: email, password: password);
 
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           homeRoute,
                           (route) => true,
                         );
                       } on WrongPasswordAuthException {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Wrong password');
                       } on UserNotFoundAuthException {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'User not found');
                       } on GenericAuthExceptions {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Unknown error');
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade500,
+                      backgroundColor: Colors.blue.shade800,
                       textStyle: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 15),
                       shape: RoundedRectangleBorder(

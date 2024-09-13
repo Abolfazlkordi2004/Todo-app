@@ -14,7 +14,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final user = AuthService.firebase().currentUser;
-    final userEmail = user?.email;
+    final userEmail = user?.email ?? 'No user';
     final showUserName = userName;
 
     return Scaffold(
@@ -76,7 +76,7 @@ class _ProfileViewState extends State<ProfileView> {
                   children: [
                     const Icon(Icons.email),
                     const SizedBox(width: 10),
-                    Text(userEmail!),
+                    Text(userEmail),
                   ],
                 ),
               ),

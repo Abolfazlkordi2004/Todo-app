@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
-import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
 import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
@@ -16,24 +15,25 @@ void main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue,brightness: Brightness.light)
-      ),
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue, brightness: Brightness.light)),
       debugShowCheckedModeBanner: false,
-      home: const MyApp(),
+      home: const HomeView(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         verfiyEmailRoute: (context) => const VerfiyEmailView(),
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
-        homeRoute: (context) => const Homeview(),
+        homeRoute: (context) => const HomeView(),
         profileRoute: (context) => const ProfileView(),
-        createTaskRoute: (context) => const CreateTaskView(),
+        // createTaskRoute: (context) => const CreateTaskView(taskServices: null,),
       },
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             final user = AuthService.firebase().currentUser;
             if (user != null) {
               if (user.isEmailverified) {
-                return const Homeview();
+                return const HomeView();
               } else {
                 return const VerfiyEmailView();
               }

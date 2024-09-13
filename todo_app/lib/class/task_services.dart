@@ -1,17 +1,22 @@
 import 'dart:async';
- 
 
 class TaskServices {
-  final StreamController<List<String>> _taskController =
-      StreamController<List<String>>.broadcast();
+  final List<List<String>> _tasks = [];
+  final StreamController<List<List<String>>> _taskStreamController =
+      StreamController<List<List<String>>>.broadcast();
 
-  Stream<List<String>> get taskStream => _taskController.stream;
+  Stream<List<List<String>>> get taskStream => _taskStreamController.stream;
 
-  void addTasks(List<String> tasks) {
-    _taskController.sink.add(tasks);
+  int get taskCount => _tasks.length;
+
+  void addTask(List<String> task) {
+    _tasks.addAll([task]);
+    _taskStreamController.add(_tasks);
+    print(_tasks);
+    print(taskCount);
   }
 
   void dispose() {
-    _taskController.close();
+    _taskStreamController.close();
   }
 }
