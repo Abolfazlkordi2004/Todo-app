@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/class/task_services.dart';
-import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/helper/Functions.dart';
+import 'package:todo_app/helper/function.dart';
 import 'package:todo_app/view/create_task_view.dart';
 
 class TaskListView extends StatefulWidget {
@@ -18,6 +17,7 @@ class _TaskListViewState extends State<TaskListView> {
   late List<bool> checkedvalue;
   late TextEditingController _searchBox;
   late List<List<String>> filteredTask;
+  Color cardOfColor = Colors.white;
 
   @override
   void didUpdateWidget(covariant TaskListView oldWidget) {
@@ -113,6 +113,7 @@ class _TaskListViewState extends State<TaskListView> {
                   background: swipeRightBackground(),
                   secondaryBackground: swipeLeftBackground(),
                   onDismissed: (direction) {
+                    widget.tasks.remove(task);
                     if (direction == DismissDirection.startToEnd) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("${task[0]} task completed")),
@@ -129,6 +130,7 @@ class _TaskListViewState extends State<TaskListView> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Card(
+                        color: cardOfColor,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
@@ -139,14 +141,19 @@ class _TaskListViewState extends State<TaskListView> {
                                     value: checkedvalue[index],
                                     onChanged: (bool? newvalue) {
                                       checkedvalue[index] = newvalue ?? false;
+                                      if (checkedvalue[index]) {
+                                        cardOfColor = Colors.blue.shade100;
+                                      } else {
+                                        cardOfColor = Colors.white;
+                                      }
                                       setState(() {});
                                     },
                                   ),
                                   Text(
                                     '${task[0][0].toUpperCase()}${task[0].substring(1)}',
                                     style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                      // fontWeight: FontWeight.bold,
+                                      fontSize: 17,
                                     ),
                                   ),
                                 ],

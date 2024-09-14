@@ -1,1 +1,1 @@
-var userName = '';
+var userName = ' ';

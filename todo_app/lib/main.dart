@@ -7,7 +7,7 @@ import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
 import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
-import 'package:todo_app/view/profile-view.dart';
+import 'package:todo_app/view/profile_view.dart';
 import 'package:todo_app/view/register_view.dart';
 import 'package:todo_app/view/verfiy_email_view.dart';
 
@@ -19,9 +19,9 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        fontFamily: 'Roboto',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
+          seedColor: Colors.blue.shade400,
         ),
       ),
       debugShowCheckedModeBanner: false,
@@ -33,7 +33,8 @@ void main() async {
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
         homeRoute: (context) => const HomeView(),
         profileRoute: (context) => const ProfileView(),
-        createTaskRoute: (context) =>CreateTaskView(taskServices: TaskServices()),
+        createTaskRoute: (context) =>
+            CreateTaskView(taskServices: TaskServices()),
       },
     ),
   );

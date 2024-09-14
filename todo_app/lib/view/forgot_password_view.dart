@@ -81,8 +81,10 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: email);
                   } on InvalidEmailAuthExceptions {
+                    // ignore: use_build_context_synchronously
                     showErrordialog(context, 'Invalid email');
                   } on GenericAuthExceptions {
+                    // ignore: use_build_context_synchronously
                     showErrordialog(context, 'Unknown error');
                   }
                 },

@@ -3,6 +3,7 @@ import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/dialogs/emprt_create_view_dialog.dart';
 
+// ignore: must_be_immutable
 class CreateTaskView extends StatefulWidget {
   final TaskServices taskServices;
   String? title;
@@ -54,7 +55,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     );
 
     if (date != null) {
-      _dateController.text = date.toLocal().toString().split(' ')[0];
+      _dateController.text = date.toLocal().toString().split(' ')[0][0];
     }
   }
 
@@ -71,7 +72,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
       final taskText = [title, task, time, date];
       widget.taskServices.addTask([title, task, time, date]);
       Navigator.of(context).pop(taskText);
-    } else if (task.isEmpty && title.isEmpty && time.isEmpty && date.isEmpty) {
+    } else if (task.isEmpty || title.isEmpty || time.isEmpty || date.isEmpty) {
       await showEmptyTextDialog(context, 'Please fill all fields');
     }
   }

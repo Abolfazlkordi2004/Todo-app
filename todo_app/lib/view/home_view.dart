@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/constant/username.dart';
 import 'package:todo_app/dialogs/error_dialog.dart';
+import 'package:todo_app/dialogs/logout_dialog.dart';
 import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/task_list_view.dart';
 
@@ -33,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: const Text(
           'My Task',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 25,fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
       ),
@@ -49,9 +51,9 @@ class _HomeViewState extends State<HomeView> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    'Username',
-                    style: TextStyle(
+                  Text(
+                    userName,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -61,6 +63,10 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             ListTile(
+              leading: const Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
               title: const Text(
                 'Profile',
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -73,12 +79,23 @@ class _HomeViewState extends State<HomeView> {
               height: 10,
             ),
             ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
               title: const Text(
                 'Logout',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              onTap: () {
-                Navigator.pushNamed(context, loginRoute);
+              onTap: () async {
+                final result = await showLogOutDialog(context);
+                if (result) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamed(loginRoute);
+                } else {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
+                }
               },
             ),
           ],
@@ -100,7 +117,10 @@ class _HomeViewState extends State<HomeView> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text('No tasks available.')
+                  const Text(
+                    'No tasks available.',
+                    style: TextStyle(fontSize: 15),
+                  )
                 ],
               ),
             );

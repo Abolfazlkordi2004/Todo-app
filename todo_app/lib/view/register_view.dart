@@ -148,17 +148,22 @@ class _RegisterViewState extends State<RegisterView> {
                         await AuthService.firebase()
                             .createUser(email: email, password: password);
                         await AuthService.firebase().sendEmailVerification();
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamedAndRemoveUntil(
                           verfiyEmailRoute,
                           (route) => false,
                         );
                       } on WeakPasswordAuthExceptions {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Weak password');
                       } on InvalidEmailAuthExceptions {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Invalid email');
                       } on EmailAlreadyInUseAuthExceptions {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Email already in use');
                       } on GenericAuthExceptions {
+                        // ignore: use_build_context_synchronously
                         showErrordialog(context, 'Unknown error');
                       }
                     },
