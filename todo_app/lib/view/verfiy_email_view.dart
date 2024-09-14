@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-// import 'dart:developer' as devtools show log;
-
 import 'package:todo_app/services/auth/auth_service.dart';
 
 class VerfiyEmailView extends StatefulWidget {

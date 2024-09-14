@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
+import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
 import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
@@ -15,10 +17,13 @@ void main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue, brightness: Brightness.light)),
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.light,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       home: const HomeView(),
       routes: {
@@ -28,7 +33,7 @@ void main() async {
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
         homeRoute: (context) => const HomeView(),
         profileRoute: (context) => const ProfileView(),
-        // createTaskRoute: (context) => const CreateTaskView(taskServices:),
+        createTaskRoute: (context) =>CreateTaskView(taskServices: TaskServices()),
       },
     ),
   );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/helper/Functions.dart';
+import 'package:todo_app/view/create_task_view.dart';
 
 class TaskListView extends StatefulWidget {
   final List<List<String>> tasks;
@@ -84,10 +86,27 @@ class _TaskListViewState extends State<TaskListView> {
           child: ListView.builder(
             itemCount: filteredTask.length,
             itemBuilder: (context, index) {
-              final task = filteredTask[index];
+              var task = filteredTask[index];
               return GestureDetector(
-                onLongPress: () {
-                  Navigator.of(context).pushNamed(profileRoute);
+                onLongPress: () async {
+                  var updateTask = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return CreateTaskView(
+                          taskServices: TaskServices(),
+                          title: task[0],
+                          taskText: task[1],
+                          time: task[2],
+                          date: task[3],
+                        );
+                      },
+                    ),
+                  );
+                  if (updateTask != null) {
+                    setState(() {
+                      widget.tasks[index] = updateTask;
+                    });
+                  }
                 },
                 child: Dismissible(
                   key: Key(task[0]),

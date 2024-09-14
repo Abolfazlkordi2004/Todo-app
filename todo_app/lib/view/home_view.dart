@@ -87,9 +87,7 @@ class _HomeViewState extends State<HomeView> {
       body: StreamBuilder<List<List<String>>>(
         stream: _taskServices.taskStream,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LinearProgressIndicator();
-          } else if (snapshot.hasError) {
+          if (snapshot.hasError) {
             showErrordialog(context, 'ERROR');
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(

@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/dialogs/emprt_create_view_dialog.dart';
 
 class CreateTaskView extends StatefulWidget {
   final TaskServices taskServices;
+  String? title;
+  String? taskText;
+  String? time;
+  String? date;
 
-  const CreateTaskView({super.key, required this.taskServices});
+  CreateTaskView({
+    super.key,
+    required this.taskServices,
+    this.title,
+    this.taskText,
+    this.time,
+    this.date,
+  });
 
   @override
   State<CreateTaskView> createState() => _CreateTaskViewState();
@@ -20,7 +32,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
   TimeOfDay nowTime = TimeOfDay.now();
   DateTime nowDate = DateTime.now();
 
-  Future<void> _showTime(BuildContext) async {
+  Future<void> _showTime(BuildContext context) async {
     var time = await showTimePicker(
       context: context,
       initialTime: nowTime,
@@ -31,7 +43,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     }
   }
 
-  Future<void> _showDate(BuildContext) async {
+  Future<void> _showDate(BuildContext context) async {
     var date = await showDatePicker(
       context: context,
       initialDate: nowDate,
@@ -46,7 +58,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     }
   }
 
-  void _addNewTask() {
+  void _addNewTask() async {
     String task = _taskController.text;
     String title = _titleController.text;
     String time = _timeController.text;
@@ -56,17 +68,20 @@ class _CreateTaskViewState extends State<CreateTaskView> {
         title.isNotEmpty &&
         time.isNotEmpty &&
         date.isNotEmpty) {
+      final taskText = [title, task, time, date];
       widget.taskServices.addTask([title, task, time, date]);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(taskText);
+    } else if (task.isEmpty && title.isEmpty && time.isEmpty && date.isEmpty) {
+      await showEmptyTextDialog(context, 'Please fill all fields');
     }
   }
 
   @override
   void initState() {
-    _taskController = TextEditingController();
-    _titleController = TextEditingController();
-    _timeController = TextEditingController();
-    _dateController = TextEditingController();
+    _taskController = TextEditingController(text: widget.taskText);
+    _titleController = TextEditingController(text: widget.title);
+    _timeController = TextEditingController(text: widget.time);
+    _dateController = TextEditingController(text: widget.date);
 
     super.initState();
   }
