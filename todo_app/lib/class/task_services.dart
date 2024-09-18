@@ -2,10 +2,10 @@ import 'dart:async';
 
 class TaskServices {
   final List<List<String>> _tasks = [];
-  final StreamController<List<List<String>>> _taskStreamController =
+  final StreamController<Iterable> _taskStreamController =
       StreamController<List<List<String>>>.broadcast();
 
-  Stream<List<List<String>>> get taskStream => _taskStreamController.stream;
+  Stream get taskStream => _taskStreamController.stream;
 
   void addTask(List<String> task) {
     _tasks.addAll([task]);

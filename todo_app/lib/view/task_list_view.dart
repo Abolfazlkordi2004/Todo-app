@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/helper/function.dart';
+import 'package:todo_app/services/cloud/cloud_task.dart';
+import 'package:todo_app/services/cloud/firebase_cloud_storage.dart';
 import 'package:todo_app/view/create_task_view.dart';
 
+// ignore: must_be_immutable
 class TaskListView extends StatefulWidget {
-  final List<List<String>> tasks;
+  List<CloudTask> tasks;
 
-  const TaskListView({super.key, required this.tasks});
+  TaskListView({super.key, required this.tasks});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,7 +18,7 @@ class TaskListView extends StatefulWidget {
 class _TaskListViewState extends State<TaskListView> {
   late List<bool> checkedvalue;
   late TextEditingController _searchBox;
-  late List<List<String>> filteredTask;
+  late FirebaseCloudStorage taskServices;
   Color cardOfColor = Colors.white;
 
   @override
@@ -32,32 +34,12 @@ class _TaskListViewState extends State<TaskListView> {
     super.initState();
     _searchBox = TextEditingController();
     checkedvalue = List.filled(widget.tasks.length, false);
-    filteredTask = widget.tasks;
-    _searchBox.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
-    _searchBox.removeListener(_onSearchChanged);
     _searchBox.dispose();
     super.dispose();
-  }
-
-  void _onSearchChanged() {
-    setState(
-      () {
-        if (_searchBox.text.isEmpty) {
-          filteredTask = widget.tasks;
-        } else {
-          String searchText = _searchBox.text.toLowerCase();
-          filteredTask = widget.tasks
-              .where(
-                (task) => task[0].toLowerCase().contains(searchText),
-              )
-              .toList();
-        }
-      },
-    );
   }
 
   @override
@@ -78,51 +60,54 @@ class _TaskListViewState extends State<TaskListView> {
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(width: 1.5),
               ),
-              suffixIcon: const Icon(Icons.search),
             ),
           ),
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: filteredTask.length,
+            itemCount: widget.tasks.length,
             itemBuilder: (context, index) {
-              var task = filteredTask[index];
+              var task = widget.tasks[index];
               return GestureDetector(
                 onLongPress: () async {
                   var updateTask = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
                         return CreateTaskView(
-                          taskServices: TaskServices(),
-                          title: task[0],
-                          taskText: task[1],
-                          time: task[2],
-                          date: task[3],
+                          title: task.title,
+                          taskText: task.text,
+                          time: task.time,
+                          date: task.date,
                         );
                       },
                     ),
                   );
                   if (updateTask != null) {
                     setState(() {
-                      widget.tasks[index] = updateTask;
+                      widget.tasks = updateTask;
                     });
                   }
                 },
                 child: Dismissible(
-                  key: Key(task[0]),
+                  key: UniqueKey(),
                   background: swipeRightBackground(),
                   secondaryBackground: swipeLeftBackground(),
                   onDismissed: (direction) {
-                    widget.tasks.remove(task);
+                    // Instead of deleting from Firebase, we just show a SnackBar
                     if (direction == DismissDirection.startToEnd) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task[0]} task completed")),
+                        SnackBar(content: Text("${task.title} marked as completed")),
                       );
                     } else if (direction == DismissDirection.endToStart) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task[0]} task deleted")),
+                        SnackBar(content: Text("${task.title} deleted locally")),
                       );
                     }
+
+                    // Optionally, you can also remove the task from the local list
+                    setState(() {
+                      widget.tasks.removeAt(index);
+                    });
                   },
                   child: SizedBox(
                     width: 400,
@@ -150,9 +135,10 @@ class _TaskListViewState extends State<TaskListView> {
                                     },
                                   ),
                                   Text(
-                                    '${task[0][0].toUpperCase()}${task[0].substring(1)}',
+                                    task.title.isNotEmpty
+                                        ? '${task.title[0].toUpperCase()}${task.title.substring(1)}'
+                                        : 'No Title',
                                     style: const TextStyle(
-                                      // fontWeight: FontWeight.bold,
                                       fontSize: 17,
                                     ),
                                   ),
@@ -162,21 +148,21 @@ class _TaskListViewState extends State<TaskListView> {
                                 padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(task[1]),
+                                  child: Text(task.text),
                                 ),
                               ),
                               const SizedBox(height: 25),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  task[2],
+                                  task.time,
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  task[3],
+                                  task.date,
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/dialogs/generics_dialog.dart';
+import 'package:todo_app/utilities.dart/dialogs/generics_dialog.dart';
 
 Future<void> showEmptyTextDialog(BuildContext context, String text) {
   return showgGenericsDialog(

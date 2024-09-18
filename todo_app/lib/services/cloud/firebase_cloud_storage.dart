@@ -1,84 +1,74 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo_app/services/cloud/cloud_storage_constant.dart';
 import 'package:todo_app/services/cloud/cloud_storage_exception.dart';
 import 'package:todo_app/services/cloud/cloud_task.dart';
 
 class FirebaseCloudStorage {
-  final tasks = FirebaseFirestore.instance.collection('Task');
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> deleteTask({required String documentId}) async {
+  Future<CloudTask> createNewTask({required String ownerUserId}) async {
+    final docRef = _db.collection('tasks').doc();
+    final newTask = CloudTask(
+      documentId: docRef.id,
+      title: '',
+      text: '',
+      time: '',
+      date: '',
+      ownerUserId: '',
+    );
     try {
-      await tasks.doc(documentId).delete();
+      await docRef.set({
+        'ownerUserId': ownerUserId,
+        'title': newTask.title,
+        'text': newTask.text,
+        'time': newTask.time,
+        'date': newTask.date,
+      });
     } catch (e) {
-      throw CouldNotDeleteTaskException();
+      throw CouldNotCreateTaskException();
     }
+    return newTask;
   }
 
-  Future<void> updateTask(
-      {required String documentId,
-      required String title,
-      required String text,
-      required String time,
-      required String date}) async {
+  Future<void> updateTask({
+    required String documentId,
+    required String title,
+    required String text,
+    required String time,
+    required String date,
+  }) async {
     try {
-      await tasks.doc(documentId).update({
-        titleFieldName: title,
-        textTaskFieldName: text,
-        timeFieldName: time,
-        dateFieldName: date
+      await _db.collection('tasks').doc(documentId).update({
+        'title': title,
+        'text': text,
+        'time': time,
+        'date': date,
       });
     } catch (e) {
       throw CouldNotUpdateTaskException();
     }
   }
 
-  Stream<Iterable<CloudTask>> allTasks({required String ownerUserId}) =>
-      tasks.snapshots().map(
-            (event) => event.docs
-                .map(
-                  (e) => CloudTask.fromSnapshot(e),
-                )
-                .where(
-                  (element) => element.ownerUserId == ownerUserId,
-                ),
-          );
-
-  Future<CloudTask> createNewTask({required String ownerUserId}) async {
-    final docs = await tasks.add({
-      ownerUserId: ownerUserId,
-      titleFieldName: '',
-      textTaskFieldName: '',
-      timeFieldName: '',
-      dateFieldName: '',
-    });
-    final fetchTask = await docs.get();
-    return CloudTask(
-      documentId: fetchTask.id,
-      ownerUserId: ownerUserId,
-      title: '',
-      text: '',
-      time: '',
-      date: '',
-    );
+  Future<void> deleteTask({required String documentId}) async {
+    try {
+      await _db.collection('tasks').doc(documentId).delete();
+    } catch (e) {
+      throw CouldNotDeleteTaskException();
+    }
   }
 
-  Future<Iterable<CloudTask>> getTasks({required String ownerUserId}) async {
+  Stream<List<CloudTask>> allTasks({required String ownerUserId}) {
     try {
-      return await tasks
-          .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
-          .get()
-          .then(
-            (value) => value.docs.map(
-              (e) => CloudTask.fromSnapshot(e),
-            ),
-          );
+      return _db
+          .collection('tasks')
+          .where('ownerUserId', isEqualTo: ownerUserId)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return CloudTask.fromSnapshot(doc);
+        }).toList();
+      });
     } catch (e) {
       throw CouldNotGetAllTaskException();
     }
   }
-
-  static final FirebaseCloudStorage _shared =
-      FirebaseCloudStorage._sharedInstace();
-  FirebaseCloudStorage._sharedInstace();
-  factory FirebaseCloudStorage() => _shared;
 }

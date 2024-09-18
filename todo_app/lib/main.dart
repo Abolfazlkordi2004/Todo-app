@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/class/task_services.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/class/theme_notifire.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/constant/theme.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
 import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/forgot_password_view.dart';
@@ -14,30 +16,38 @@ import 'package:todo_app/view/verfiy_email_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue.shade400,
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const HomeView(),
-      routes: {
-        loginRoute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        verfiyEmailRoute: (context) => const VerfiyEmailView(),
-        forgotPasswordRoute: (context) => const ForgotPasswordView(),
-        homeRoute: (context) => const HomeView(),
-        profileRoute: (context) => const ProfileView(),
-        createTaskRoute: (context) =>
-            CreateTaskView(taskServices: TaskServices()),
+  runApp(ChangeNotifierProvider(
+    create: (_) => ThemeNotifier(),
+    child: const MyApp(),
+  ));
+}
+
+class HomeApp extends StatelessWidget {
+  const HomeApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, child) {
+        return MaterialApp(
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          home: const MyApp(),
+          routes: {
+            loginRoute: (context) => const LoginView(),
+            registerRoute: (context) => const RegisterView(),
+            verfiyEmailRoute: (context) => const VerfiyEmailView(),
+            forgotPasswordRoute: (context) => const ForgotPasswordView(),
+            homeRoute: (context) => const HomeView(),
+            profileRoute: (context) => const ProfileView(),
+            createTaskRoute: (context) => CreateTaskView(),
+          },
+        );
       },
-    ),
-  );
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
