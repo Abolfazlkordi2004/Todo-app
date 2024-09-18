@@ -1,16 +1,16 @@
-class CloudStorageExceptions implements Exception{
-  const CloudStorageExceptions();
-}
+// class CloudStorageExceptions implements Exception{
+//   const CloudStorageExceptions();
+// }
 
 
-// C
-class CouldNotCreateTaskException implements CloudStorageExceptions{}
+// // C
+// class CouldNotCreateTaskException implements CloudStorageExceptions{}
 
-// R 
-class CouldNotGetAllTaskException implements CloudStorageExceptions{}
+// // R 
+// class CouldNotGetAllTaskException implements CloudStorageExceptions{}
 
-// U
-class CouldNotUpdateTaskException implements CloudStorageExceptions{}
+// // U
+// class CouldNotUpdateTaskException implements CloudStorageExceptions{}
 
-// D
-class CouldNotDeleteTaskException implements CloudStorageExceptions{}
+// // D
+// class CouldNotDeleteTaskException implements CloudStorageExceptions{}

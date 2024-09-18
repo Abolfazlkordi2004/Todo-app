@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/helper/function.dart';
-import 'package:todo_app/services/cloud/cloud_task.dart';
-import 'package:todo_app/services/cloud/firebase_cloud_storage.dart';
 import 'package:todo_app/view/create_task_view.dart';
 
-// ignore: must_be_immutable
 class TaskListView extends StatefulWidget {
-  List<CloudTask> tasks;
+  final List<List<String>> tasks;
 
-  TaskListView({super.key, required this.tasks});
+  const TaskListView({super.key, required this.tasks});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -18,7 +16,7 @@ class TaskListView extends StatefulWidget {
 class _TaskListViewState extends State<TaskListView> {
   late List<bool> checkedvalue;
   late TextEditingController _searchBox;
-  late FirebaseCloudStorage taskServices;
+  late List<List<String>> filteredTask;
   Color cardOfColor = Colors.white;
 
   @override
@@ -34,12 +32,32 @@ class _TaskListViewState extends State<TaskListView> {
     super.initState();
     _searchBox = TextEditingController();
     checkedvalue = List.filled(widget.tasks.length, false);
+    filteredTask = widget.tasks;
+    _searchBox.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    _searchBox.removeListener(_onSearchChanged);
     _searchBox.dispose();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    setState(
+      () {
+        if (_searchBox.text.isEmpty) {
+          filteredTask = widget.tasks;
+        } else {
+          String searchText = _searchBox.text.toLowerCase();
+          filteredTask = widget.tasks
+              .where(
+                (task) => task[0].toLowerCase().contains(searchText),
+              )
+              .toList();
+        }
+      },
+    );
   }
 
   @override
@@ -60,54 +78,54 @@ class _TaskListViewState extends State<TaskListView> {
                 borderRadius: BorderRadius.circular(20),
                 borderSide: const BorderSide(width: 1.5),
               ),
+              suffixIcon: IconButton(
+                onPressed: _onSearchChanged,
+                icon: const Icon(Icons.search),
+              ),
             ),
           ),
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: widget.tasks.length,
+            itemCount: filteredTask.length,
             itemBuilder: (context, index) {
-              var task = widget.tasks[index];
+              var task = filteredTask[index];
               return GestureDetector(
                 onLongPress: () async {
                   var updateTask = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
                         return CreateTaskView(
-                          title: task.title,
-                          taskText: task.text,
-                          time: task.time,
-                          date: task.date,
+                          taskServices: TaskServices(),
+                          title: task[0],
+                          taskText: task[1],
+                          time: task[2],
+                          date: task[3],
                         );
                       },
                     ),
                   );
                   if (updateTask != null) {
                     setState(() {
-                      widget.tasks = updateTask;
+                      widget.tasks[index] = updateTask;
                     });
                   }
                 },
                 child: Dismissible(
-                  key: UniqueKey(),
+                  key: Key(task[0]),
                   background: swipeRightBackground(),
                   secondaryBackground: swipeLeftBackground(),
                   onDismissed: (direction) {
-                    // Instead of deleting from Firebase, we just show a SnackBar
+                    widget.tasks.remove(task);
                     if (direction == DismissDirection.startToEnd) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task.title} marked as completed")),
+                        SnackBar(content: Text("${task[0]} completed")),
                       );
                     } else if (direction == DismissDirection.endToStart) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task.title} deleted locally")),
+                        SnackBar(content: Text("${task[0]} deleted")),
                       );
                     }
-
-                    // Optionally, you can also remove the task from the local list
-                    setState(() {
-                      widget.tasks.removeAt(index);
-                    });
                   },
                   child: SizedBox(
                     width: 400,
@@ -122,47 +140,38 @@ class _TaskListViewState extends State<TaskListView> {
                             children: [
                               Row(
                                 children: [
-                                  Checkbox(
-                                    value: checkedvalue[index],
-                                    onChanged: (bool? newvalue) {
-                                      checkedvalue[index] = newvalue ?? false;
-                                      if (checkedvalue[index]) {
-                                        cardOfColor = Colors.blue.shade100;
-                                      } else {
-                                        cardOfColor = Colors.white;
-                                      }
-                                      setState(() {});
-                                    },
-                                  ),
-                                  Text(
-                                    task.title.isNotEmpty
-                                        ? '${task.title[0].toUpperCase()}${task.title.substring(1)}'
-                                        : 'No Title',
-                                    style: const TextStyle(
-                                      fontSize: 17,
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    child: Text(
+                                      '${task[0][0].toUpperCase()}${task[0].substring(1)}',
+                                      style: const TextStyle(
+                                        // fontWeight: FontWeight.bold,
+                                        fontSize: 17,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(task.text),
+                                  child: Text(task[1]),
                                 ),
                               ),
                               const SizedBox(height: 25),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  task.time,
+                                  task[2],
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
-                                  task.date,
+                                  task[3],
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ),

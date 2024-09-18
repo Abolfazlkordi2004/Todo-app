@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/class/theme_notifire.dart';
+import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/constant/username.dart';
-import 'package:todo_app/services/auth/auth_service.dart';
-import 'package:todo_app/services/cloud/firebase_cloud_storage.dart';
+import 'package:todo_app/theme/theme_notifer.dart';
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
 import 'package:todo_app/utilities.dart/dialogs/logout_dialog.dart';
 import 'package:todo_app/view/create_task_view.dart';
@@ -18,22 +17,22 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late FirebaseCloudStorage _taskServices;
-
-  String? get userId => AuthService.firebase().currentUser?.id;
+  late TaskServices _taskServices;
 
   @override
   void initState() {
     super.initState();
-    _taskServices = FirebaseCloudStorage();
+    _taskServices = TaskServices();
+  }
+
+  @override
+  void dispose() {
+    _taskServices.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (userId == null) {
-      return const Center(child: Text('User is not logged in.'));
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -41,6 +40,19 @@ class _HomeViewState extends State<HomeView> {
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+              if (themeNotifier.themeMode == ThemeMode.light) {
+                themeNotifier.setTheme(ThemeMode.dark);
+              } else {
+                themeNotifier.setTheme(ThemeMode.light);
+              }
+            },
+            icon: const Icon(Icons.sunny),
+          )
+        ],
       ),
       drawer: Drawer(
         backgroundColor: Colors.black12,
@@ -51,7 +63,9 @@ class _HomeViewState extends State<HomeView> {
               child: Column(
                 children: [
                   Image.asset('assets/icons/user2.png'),
-                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Text(
                     userName,
                     style: const TextStyle(
@@ -64,7 +78,10 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person, color: Colors.white),
+              leading: const Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
               title: const Text(
                 'Profile',
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -73,9 +90,14 @@ class _HomeViewState extends State<HomeView> {
                 Navigator.pushNamed(context, profileRoute);
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 10,
+            ),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.white),
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
               title: const Text(
                 'Logout',
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -83,53 +105,42 @@ class _HomeViewState extends State<HomeView> {
               onTap: () async {
                 final result = await showLogOutDialog(context);
                 if (result) {
-                  // Safely handle navigation
-                  if (mounted) {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(loginRoute, (route) => false);
-                  }
-                }
-              },
-            ),
-            IconButton(
-              onPressed: () {
-                ThemeNotifier themeNotifier =
-                    Provider.of<ThemeNotifier>(context, listen: false);
-                if (themeNotifier.themeMode == ThemeMode.light) {
-                  themeNotifier.setTheme(ThemeMode.dark);
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamed(loginRoute);
                 } else {
-                  themeNotifier.setTheme(ThemeMode.light);
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop();
                 }
               },
-              icon: const Icon(Icons.brightness_6),
             ),
           ],
         ),
       ),
-      body: StreamBuilder(
-        stream: _taskServices.allTasks(ownerUserId: userId!),
+      body: StreamBuilder<List<List<String>>>(
+        stream: _taskServices.taskStream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            showErrordialog(context, 'ERROR: ${snapshot.error}');
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            showErrordialog(context, 'ERROR');
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/icons/iconTask.png'),
-                  const SizedBox(height: 10),
+                  Image.asset(
+                    'assets/icons/iconTask.png',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   const Text(
                     'No tasks available.',
                     style: TextStyle(fontSize: 15),
-                  ),
+                  )
                 ],
               ),
             );
           }
-
-          final tasks = snapshot.data!.toList();
+          final tasks = snapshot.data!;
           return TaskListView(tasks: tasks);
         },
       ),
@@ -138,7 +149,9 @@ class _HomeViewState extends State<HomeView> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => CreateTaskView(),
+              builder: (context) => CreateTaskView(
+                taskServices: _taskServices,
+              ),
             ),
           );
         },
