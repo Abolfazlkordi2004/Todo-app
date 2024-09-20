@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
 import 'package:todo_app/constant/username.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
@@ -40,81 +42,73 @@ class _RegisterViewState extends State<RegisterView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(4 * Responsive().widthConfige),
           child: Center(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 100,
-                ),
+                heightSizedBox(10),
                 Text(
                   'Sign Up',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 2.5 * Responsive().textConfige,
                       color: Colors.blue.shade900),
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                heightSizedBox(5),
                 TextField(
                   controller: _userName,
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: const TextStyle(color: Colors.black),
+                     
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide( width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                     ),
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.name,
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                heightSizedBox(3),
                 TextField(
                   controller: _email,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: const TextStyle(color: Colors.black),
+                     
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                     ),
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                heightSizedBox(3),
                 TextField(
                   controller: _password,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: const TextStyle(color: Colors.black),
+                   
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                     ),
                     suffixIcon: IconButton(
                       onPressed: () {
@@ -133,12 +127,10 @@ class _RegisterViewState extends State<RegisterView> {
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: !_passwordVisible,
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                heightSizedBox(5),
                 SizedBox(
-                  height: 55,
-                  width: 450,
+                  height: 5.5 * Responsive().heightConfige,
+                  width: 90 * Responsive().widthConfige,
                   child: ElevatedButton(
                     onPressed: () async {
                       var email = _email.text.trim();
@@ -169,8 +161,10 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade800,
-                      textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 2 * Responsive().textConfige,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -181,9 +175,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                 heightSizedBox(2),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -193,7 +185,7 @@ class _RegisterViewState extends State<RegisterView> {
                   },
                   child: const Text(
                     "Already have an account? Login here",
-                    style: TextStyle(color: Colors.black),
+                   
                   ),
                 ),
               ],

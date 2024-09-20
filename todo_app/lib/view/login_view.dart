@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
 import 'package:todo_app/constant/username.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
@@ -40,81 +42,73 @@ class _LoginView extends State<LoginView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(4 * Responsive().widthConfige),
           child: Center(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 100,
-                ),
+                heightSizedBox(10),
                 Text(
                   'Sign in',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontSize: 2.5 * Responsive().textConfige,
                       color: Colors.blue.shade900),
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                heightSizedBox(5),
                 TextField(
                   controller: _userName, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: const TextStyle(color: Colors.black),
+                     
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide( width: 1.5),
                     ),
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.name,
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                heightSizedBox(3),
                 TextField(
                   controller: _email, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: const TextStyle(color: Colors.black),
+                    
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                     ),
                   ),
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                heightSizedBox(3),
                 TextField(
                   controller: _password, // Added the controller
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: const TextStyle(color: Colors.black),
+                   
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide( width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(color: Colors.black, width: 1.5),
+                          const BorderSide(  width: 1.5),
                     ),
                     suffixIcon: IconButton(
                       onPressed: () {
@@ -133,12 +127,10 @@ class _LoginView extends State<LoginView> {
                   keyboardType: TextInputType.visiblePassword,
                   obscureText: !_passwordVisible,
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                heightSizedBox(5),
                 SizedBox(
-                  height: 55,
-                  width: 450,
+                  height: 5 * Responsive().heightConfige,
+                  width: 90 * Responsive().widthConfige,
                   child: ElevatedButton(
                     onPressed: () async {
                       try {
@@ -167,8 +159,10 @@ class _LoginView extends State<LoginView> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade800,
-                      textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 2 * Responsive().textConfige,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -179,9 +173,7 @@ class _LoginView extends State<LoginView> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                 heightSizedBox(2),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -191,7 +183,7 @@ class _LoginView extends State<LoginView> {
                   },
                   child: const Text(
                     "Forgot password",
-                    style: TextStyle(color: Colors.black),
+                    
                   ),
                 ),
                 TextButton(
@@ -203,7 +195,7 @@ class _LoginView extends State<LoginView> {
                   },
                   child: const Text(
                     "Do not have account? Register here",
-                    style: TextStyle(color: Colors.black),
+                   
                   ),
                 ),
               ],

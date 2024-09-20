@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
 import 'package:todo_app/services/auth/auth_exception.dart';
 // import 'dart:developer' as devtools show log;
@@ -32,48 +34,42 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(4 * Responsive().widthConfige),
           child: Column(
             children: [
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
+              heightSizedBox(3),
+              Text(
                 'Forgot password',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 2.5 * Responsive().textConfige,
+                    fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              heightSizedBox(2),
               const Divider(
                 color: Colors.grey,
                 indent: 10,
                 endIndent: 10,
               ),
-              const SizedBox(
-                height: 40,
-              ),
+              heightSizedBox(2),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: const TextStyle(color: Colors.black),
+                
                   enabledBorder: OutlineInputBorder(
                     borderSide:
-                        const BorderSide(color: Colors.black, width: 1.5),
+                        const BorderSide(  width: 1.5),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide:
-                        const BorderSide(color: Colors.black, width: 1.5),
+                        const BorderSide(  width: 1.5),
                   ),
                 ),
                 autocorrect: false,
                 keyboardType: TextInputType.visiblePassword,
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              heightSizedBox(2),
               TextButton(
                 onPressed: () async {
                   try {
@@ -90,7 +86,6 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                 },
                 child: const Text(
                   "Send me reset password",
-                  style: TextStyle(color: Colors.black),
                 ),
               ),
               TextButton(
@@ -99,7 +94,6 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                 },
                 child: const Text(
                   "Back to login",
-                  style: TextStyle(color: Colors.black),
                 ),
               )
             ],

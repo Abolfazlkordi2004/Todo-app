@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/helper/function.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/view/create_task_view.dart';
 
 class TaskListView extends StatefulWidget {
@@ -17,7 +19,6 @@ class _TaskListViewState extends State<TaskListView> {
   late List<bool> checkedvalue;
   late TextEditingController _searchBox;
   late List<List<String>> filteredTask;
-  Color cardOfColor = Colors.white;
 
   @override
   void didUpdateWidget(covariant TaskListView oldWidget) {
@@ -65,7 +66,7 @@ class _TaskListViewState extends State<TaskListView> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: EdgeInsets.all(3.5 * Responsive().widthConfige),
           child: TextField(
             controller: _searchBox,
             decoration: InputDecoration(
@@ -128,51 +129,58 @@ class _TaskListViewState extends State<TaskListView> {
                     }
                   },
                   child: SizedBox(
-                    width: 400,
-                    height: 200,
+                    width: 100 * Responsive().widthConfige,
+                    height: 25 * Responsive().heightConfige,
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(3 * Responsive().widthConfige),
                       child: Card(
-                        color: cardOfColor,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(
+                            5 * Responsive().widthConfige,
+                          ),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: Text(
-                                      '${task[0][0].toUpperCase()}${task[0].substring(1)}',
-                                      style: const TextStyle(
-                                        // fontWeight: FontWeight.bold,
-                                        fontSize: 17,
-                                      ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                    3 * Responsive().widthConfige, 0, 0, 0),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    '${task[0][0].toUpperCase()}${task[0].substring(1)}',
+                                    style: TextStyle(
+                                      // fontWeight: FontWeight.bold,
+                                      fontSize: 1.7 * Responsive().textConfige,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
+                              heightSizedBox(1),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                padding: EdgeInsets.fromLTRB(
+                                    3.0 * Responsive().widthConfige, 0, 0, 0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(task[1]),
                                 ),
                               ),
-                              const SizedBox(height: 25),
+                              heightSizedBox(2.5),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
                                   task[2],
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 1.4 * Responsive().textConfige,
+                                  ),
                                 ),
                               ),
+                              heightSizedBox(1),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text(
                                   task[3],
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 1.4 * Responsive().textConfige,
+                                  ),
                                 ),
                               ),
                             ],

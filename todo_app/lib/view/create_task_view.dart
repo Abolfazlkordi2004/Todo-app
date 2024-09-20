@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/utilities.dart/dialogs/empty_create_view_dialog.dart';
 
 // ignore: must_be_immutable
@@ -98,148 +100,136 @@ class _CreateTaskViewState extends State<CreateTaskView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 60,
-                  ),
-                  const Text(
-                    'Add new Task',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    indent: 3,
-                    endIndent: 3,
-                    thickness: 1,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    controller: _titleController,
-                    decoration:
-                        const InputDecoration(hintText: 'Title of task'),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                    controller: _taskController,
-                    decoration: const InputDecoration(hintText: 'Description'),
-                  ),
-                  const SizedBox(height: 50),
-                  TextFormField(
-                    controller: _timeController,
-                    decoration: InputDecoration(
-                      hintText: 'select Time',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.timer_sharp),
-                        onPressed: () {
-                          _showTime(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    controller: _dateController,
-                    decoration: InputDecoration(
-                      hintText: 'select Date',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.date_range),
-                        onPressed: () {
-                          _showDate(context);
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Responsive().init(constraints: constraints);
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(1.6 * Responsive().widthConfige),
+                  child: Column(
                     children: [
-                      SizedBox(
-                        width: 150,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(homeRoute);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            textStyle: const TextStyle(color: Colors.black),
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  color: Colors.black, width: 1.5),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                      heightSizedBox(6),
+                      Text(
+                        'Add new Task',
+                        style: TextStyle(
+                            fontSize: 2.5 * Responsive().textConfige,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      heightSizedBox(1),
+                      const Divider(
+                        color: Colors.grey,
+                        indent: 3,
+                        endIndent: 3,
+                        thickness: 1,
+                      ),
+                      heightSizedBox(2),
+                      TextField(
+                        controller: _titleController,
+                        decoration:
+                            const InputDecoration(hintText: 'Title of task'),
+                      ),
+                      heightSizedBox(3),
+                      TextField(
+                        controller: _taskController,
+                        decoration:
+                            const InputDecoration(hintText: 'Description'),
+                      ),
+                      heightSizedBox(5),
+                      TextFormField(
+                        controller: _timeController,
+                        decoration: InputDecoration(
+                          hintText: 'select Time',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
                           ),
-                          child: const Text('Cancel'),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.timer_sharp),
+                            onPressed: () {
+                              _showTime(context);
+                            },
+                          ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      SizedBox(
-                        width: 150,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            _addNewTask();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue.shade800,
-                            foregroundColor: Colors.white,
-                            textStyle: const TextStyle(color: Colors.black),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                      heightSizedBox(2),
+                      TextFormField(
+                        controller: _dateController,
+                        decoration: InputDecoration(
+                          hintText: 'select Date',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
                           ),
-                          child: const Text('Create'),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.date_range),
+                            onPressed: () {
+                              _showDate(context);
+                            },
+                          ),
                         ),
                       ),
+                      heightSizedBox(5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 35 * Responsive().widthConfige,
+                            height: 5 * Responsive().heightConfige,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(homeRoute);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                                textStyle: const TextStyle(color: Colors.black),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(width: 1.5),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                          widthSizedBox(10),
+                          SizedBox(
+                            width: 35 * Responsive().widthConfige,
+                            height: 5 * Responsive().heightConfige,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                _addNewTask();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text('Create'),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

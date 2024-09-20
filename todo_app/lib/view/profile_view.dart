@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/constant/username.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
 
 class ProfileView extends StatefulWidget {
@@ -19,52 +21,49 @@ class _ProfileViewState extends State<ProfileView> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(4 * Responsive().widthConfige),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 100),
+              heightSizedBox(10),
               Center(
                 child: Image.asset(
                   'assets/images/profile.png',
-                  width: 150,
-                  height: 150,
+                  width: 1.5 * Responsive().widthConfige,
+                  height: 15 * Responsive().heightConfige,
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              heightSizedBox(2),
               const Divider(
                 color: Colors.grey,
                 thickness: 1,
                 indent: 20,
                 endIndent: 20,
               ),
-              const SizedBox(height: 20),
+              heightSizedBox(2),
               Center(
                 child: Text(
                   showUserName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 2.0 * Responsive().textConfige,
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
-
+              heightSizedBox(5),
               // Email Section
-              const Text(
+              Text(
                 'Your Email',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 1.6 * Responsive().textConfige,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 5),
+              heightSizedBox(0.5),
               Container(
-                height: 50,
-                padding: const EdgeInsets.all(10),
+                height: 5 * Responsive().heightConfige,
+                padding: EdgeInsets.all(1.0 * Responsive().widthConfige),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.black,
@@ -75,25 +74,24 @@ class _ProfileViewState extends State<ProfileView> {
                 child: Row(
                   children: [
                     const Icon(Icons.email),
-                    const SizedBox(width: 10),
+                    widthSizedBox(1),
                     Text(userEmail),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-
+              heightSizedBox(3),
               // Password Section (we never show the real password)
-              const Text(
+              Text(
                 'Password',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 1.6 * Responsive().textConfige,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 5),
+              heightSizedBox(0.5),
               Container(
-                height: 50,
-                padding: const EdgeInsets.all(10),
+                height: 5.0 * Responsive().heightConfige,
+                padding: EdgeInsets.all(1.0 * Responsive().widthConfige),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.black,
@@ -101,15 +99,15 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.lock),
-                    SizedBox(width: 10),
-                    Text('*********'),
+                    const Icon(Icons.lock),
+                    widthSizedBox(1),
+                    const Text('************'),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              heightSizedBox(2),
 
               // Back to Home Button
               Center(
@@ -119,7 +117,6 @@ class _ProfileViewState extends State<ProfileView> {
                   },
                   child: const Text(
                     'Back to home',
-                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Responsive/responsive.dart';
+import 'package:todo_app/helper/space.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
 
 class VerfiyEmailView extends StatefulWidget {
@@ -18,26 +20,28 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(1.6 * Responsive().widthConfige),
           child: Column(
             children: [
-              const Text(
+              Text(
                 "we ve' sent you an email verification.please open it to verify your account",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontSize: 1.5 * Responsive().textConfige,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
+              heightSizedBox(10),
+              Text(
                 "If you haven't received a verification email yet, press the button below",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                style: TextStyle(
+                  fontSize: 1.5 * Responsive().textConfige,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              const SizedBox(
-                height: 25,
-              ),
+              heightSizedBox(10),
               SizedBox(
-                width: 250,
-                height: 55,
+                width: 25 * Responsive().widthConfige,
+                height: 5.5 * Responsive().heightConfige,
                 child: ElevatedButton(
                   onPressed: () async {
                     await AuthService.firebase().sendEmailVerification();
@@ -46,12 +50,10 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
                   child: const Text('send Email verfication'),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              heightSizedBox(20),
               SizedBox(
-                width: 250,
-                height: 55,
+                width: 25 * Responsive().widthConfige,
+                height: 5.5 * Responsive().heightConfige,
                 child: ElevatedButton(
                   onPressed: () async {
                     await AuthService.firebase().logOut();
