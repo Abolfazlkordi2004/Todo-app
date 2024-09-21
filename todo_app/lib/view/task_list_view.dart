@@ -63,138 +63,143 @@ class _TaskListViewState extends State<TaskListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(3.5 * Responsive().widthConfige),
-          child: TextField(
-            controller: _searchBox,
-            decoration: InputDecoration(
-              hintText: 'Search here...',
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(width: 1.5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: const BorderSide(width: 1.5),
-              ),
-              suffixIcon: IconButton(
-                onPressed: _onSearchChanged,
-                icon: const Icon(Icons.search),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        Responsive().init(constraints: constraints);
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(3.5 * Responsive().widthConfige),
+              child: TextField(
+                controller: _searchBox,
+                decoration: InputDecoration(
+                  hintText: 'Search here...',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: const BorderSide(width: 1.5),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: _onSearchChanged,
+                    icon: const Icon(Icons.search),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: filteredTask.length,
-            itemBuilder: (context, index) {
-              var task = filteredTask[index];
-              return GestureDetector(
-                onLongPress: () async {
-                  var updateTask = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return CreateTaskView(
-                          taskServices: TaskServices(),
-                          title: task[0],
-                          taskText: task[1],
-                          time: task[2],
-                          date: task[3],
-                        );
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredTask.length,
+                itemBuilder: (context, index) {
+                  var task = filteredTask[index];
+                  return GestureDetector(
+                    onLongPress: () async {
+                      var updateTask = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CreateTaskView(
+                              taskServices: TaskServices(),
+                              title: task[0],
+                              taskText: task[1],
+                              time: task[2],
+                              date: task[3],
+                            );
+                          },
+                        ),
+                      );
+                      if (updateTask != null) {
+                        setState(() {
+                          widget.tasks[index] = updateTask;
+                        });
+                      }
+                    },
+                    child: Dismissible(
+                      key: Key(task[0]),
+                      background: swipeRightBackground(),
+                      secondaryBackground: swipeLeftBackground(),
+                      onDismissed: (direction) {
+                        widget.tasks.remove(task);
+                        if (direction == DismissDirection.startToEnd) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("${task[0]} completed")),
+                          );
+                        } else if (direction == DismissDirection.endToStart) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("${task[0]} deleted")),
+                          );
+                        }
                       },
-                    ),
-                  );
-                  if (updateTask != null) {
-                    setState(() {
-                      widget.tasks[index] = updateTask;
-                    });
-                  }
-                },
-                child: Dismissible(
-                  key: Key(task[0]),
-                  background: swipeRightBackground(),
-                  secondaryBackground: swipeLeftBackground(),
-                  onDismissed: (direction) {
-                    widget.tasks.remove(task);
-                    if (direction == DismissDirection.startToEnd) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task[0]} completed")),
-                      );
-                    } else if (direction == DismissDirection.endToStart) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${task[0]} deleted")),
-                      );
-                    }
-                  },
-                  child: SizedBox(
-                    width: 100 * Responsive().widthConfige,
-                    height: 25 * Responsive().heightConfige,
-                    child: Padding(
-                      padding: EdgeInsets.all(3 * Responsive().widthConfige),
-                      child: Card(
+                      child: SizedBox(
+                        width: 100 * Responsive().widthConfige,
+                        height: 25 * Responsive().heightConfige,
                         child: Padding(
-                          padding: EdgeInsets.all(
-                            5 * Responsive().widthConfige,
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    3 * Responsive().widthConfige, 0, 0, 0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${task[0][0].toUpperCase()}${task[0].substring(1)}',
-                                    style: TextStyle(
-                                      // fontWeight: FontWeight.bold,
-                                      fontSize: 1.7 * Responsive().textConfige,
+                          padding:
+                              EdgeInsets.all(1 * Responsive().widthConfige),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      3 * Responsive().widthConfige,
+                                      3 * Responsive().heightConfige,
+                                      0,
+                                      0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '${task[0][0].toUpperCase()}${task[0].substring(1)}',
+                                      style: TextStyle(
+                                        // fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            1.7 * Responsive().textConfige,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              heightSizedBox(1),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    3.0 * Responsive().widthConfige, 0, 0, 0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(task[1]),
-                                ),
-                              ),
-                              heightSizedBox(2.5),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  task[2],
-                                  style: TextStyle(
-                                    fontSize: 1.4 * Responsive().textConfige,
+                                heightSizedBox(1),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      3.0 * Responsive().widthConfige, 0, 0, 0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(task[1]),
                                   ),
                                 ),
-                              ),
-                              heightSizedBox(1),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  task[3],
-                                  style: TextStyle(
-                                    fontSize: 1.4 * Responsive().textConfige,
+                                heightSizedBox(3.5),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    task[2],
+                                    style: TextStyle(
+                                      fontSize: 1.4 * Responsive().textConfige,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                heightSizedBox(1),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    task[3],
+                                    style: TextStyle(
+                                      fontSize: 1.4 * Responsive().textConfige,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

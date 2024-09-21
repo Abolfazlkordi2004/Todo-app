@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/services/auth/auth_service.dart'; // Ensure this path is correct
+import 'package:todo_app/firebase_options.dart';
+import 'package:todo_app/services/auth/auth_service.dart';  
 import 'package:todo_app/theme/theme_mode.dart';
 import 'package:todo_app/theme/theme_notifer.dart';
 import 'package:todo_app/view/create_task_view.dart';
@@ -12,12 +13,11 @@ import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
 import 'package:todo_app/view/profile_view.dart';
 import 'package:todo_app/view/register_view.dart';
-import 'package:todo_app/view/verfiy_email_view.dart'; // Ensure this path is correct
+import 'package:todo_app/view/verfiy_email_view.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
@@ -40,13 +40,15 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: const AuthWidget(),
           routes: {
-            homeRoute:(context)=> const HomeView(),
-            createTaskRoute:(context)=> CreateTaskView(taskServices: TaskServices(),),
-            loginRoute:(context)=> const LoginView(),
-            profileRoute:(context)=> const ProfileView(),
-            registerRoute:(context)=> const RegisterView(),
-            forgotPasswordRoute:(context)=> const ForgotPasswordView(),
-            verfiyEmailRoute:(context)=> const VerfiyEmailView(),
+            homeRoute: (context) => const HomeView(),
+            createTaskRoute: (context) => CreateTaskView(
+                  taskServices: TaskServices(),
+                ),
+            loginRoute: (context) => const LoginView(),
+            profileRoute: (context) => const ProfileView(),
+            registerRoute: (context) => const RegisterView(),
+            forgotPasswordRoute: (context) => const ForgotPasswordView(),
+            verfiyEmailRoute: (context) => const VerfiyEmailView(),
           },
         );
       },
