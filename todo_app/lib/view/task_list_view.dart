@@ -19,6 +19,7 @@ class _TaskListViewState extends State<TaskListView> {
   late List<bool> checkedvalue;
   late TextEditingController _searchBox;
   late List<List<String>> filteredTask;
+  late TaskServices _taskServices;
 
   @override
   void didUpdateWidget(covariant TaskListView oldWidget) {
@@ -35,6 +36,7 @@ class _TaskListViewState extends State<TaskListView> {
     checkedvalue = List.filled(widget.tasks.length, false);
     filteredTask = widget.tasks;
     _searchBox.addListener(_onSearchChanged);
+    _taskServices=TaskServices();
   }
 
   @override
@@ -120,14 +122,24 @@ class _TaskListViewState extends State<TaskListView> {
                       background: swipeRightBackground(),
                       secondaryBackground: swipeLeftBackground(),
                       onDismissed: (direction) {
-                        widget.tasks.remove(task);
+                        final removedTask = widget.tasks[index];
+                        setState(
+                          () {
+                            widget.tasks.removeAt(index);
+                            _taskServices.removeTasks(removedTask);
+                          },
+                        );
                         if (direction == DismissDirection.startToEnd) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("${task[0]} completed")),
+                            SnackBar(
+                              content: Text("${removedTask[0]} completed"),
+                            ),
                           );
                         } else if (direction == DismissDirection.endToStart) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("${task[0]} deleted")),
+                            SnackBar(
+                              content: Text("${removedTask[0]} deleted"),
+                            ),
                           );
                         }
                       },

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/firebase_options.dart';
-import 'package:todo_app/services/auth/auth_service.dart';  
+import 'package:todo_app/services/auth/auth_service.dart';
 import 'package:todo_app/theme/theme_mode.dart';
 import 'package:todo_app/theme/theme_notifer.dart';
 import 'package:todo_app/view/create_task_view.dart';
@@ -13,7 +13,7 @@ import 'package:todo_app/view/home_view.dart';
 import 'package:todo_app/view/login_view.dart';
 import 'package:todo_app/view/profile_view.dart';
 import 'package:todo_app/view/register_view.dart';
-import 'package:todo_app/view/verfiy_email_view.dart'; 
+import 'package:todo_app/view/verfiy_email_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -61,23 +61,21 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     }
   }
 
-  void _addNewTask() async {
-    String task = _taskController.text;
-    String title = _titleController.text;
-    String time = _timeController.text;
-    String date = _dateController.text;
+void _addNewTask() async {
+  String task = _taskController.text;
+  String title = _titleController.text;
+  String time = _timeController.text;
+  String date = _dateController.text;
 
-    if (task.isNotEmpty &&
-        title.isNotEmpty &&
-        time.isNotEmpty &&
-        date.isNotEmpty) {
-      final taskText = [title, task, time, date];
-      widget.taskServices.addTask([title, task, time, date]);
-      Navigator.of(context).pop(taskText);
-    } else if (task.isEmpty || title.isEmpty || time.isEmpty || date.isEmpty) {
-      await showEmptyTextDialog(context, 'Please fill all fields');
-    }
+  if (task.isNotEmpty && title.isNotEmpty && time.isNotEmpty && date.isNotEmpty) {
+    final taskText = [title, task, time, date];
+    widget.taskServices.addTask(taskText); // This will handle saving
+    Navigator.of(context).pop(taskText);
+  } else {
+    await showEmptyTextDialog(context, 'Please fill all fields');
   }
+}
+
 
   @override
   void initState() {
