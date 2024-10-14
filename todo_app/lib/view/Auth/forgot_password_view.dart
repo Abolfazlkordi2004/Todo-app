@@ -42,7 +42,7 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                 children: [
                   heightSizedBox(3),
                   Text(
-                    'Forgot password',
+                    'فراموشی رمز عبور',
                     style: TextStyle(
                         fontSize: 2.5 * Responsive().textConfige,
                         fontWeight: FontWeight.bold),
@@ -54,20 +54,23 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                     endIndent: 10,
                   ),
                   heightSizedBox(2),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(width: 1.5),
-                        borderRadius: BorderRadius.circular(10),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'ایمیل',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(width: 1.5),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(width: 1.5),
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(width: 1.5),
-                      ),
+                      autocorrect: false,
+                      keyboardType: TextInputType.visiblePassword,
                     ),
-                    autocorrect: false,
-                    keyboardType: TextInputType.visiblePassword,
                   ),
                   heightSizedBox(2),
                   TextButton(
@@ -78,14 +81,14 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                             .sendPasswordResetEmail(email: email);
                       } on InvalidEmailAuthExceptions {
                         // ignore: use_build_context_synchronously
-                        showErrordialog(context, 'Invalid email');
+                        showErrordialog(context, 'ایمیل وارد شده غلط است');
                       } on GenericAuthExceptions {
                         // ignore: use_build_context_synchronously
-                        showErrordialog(context, 'Unknown error');
+                        showErrordialog(context, 'خطا');
                       }
                     },
                     child: const Text(
-                      "Send me reset password",
+                      "فرستادن رمز فراموشی",
                     ),
                   ),
                   TextButton(
@@ -93,7 +96,7 @@ class _ForgotPasswordState extends State<ForgotPasswordView> {
                       Navigator.of(context).pushNamed(loginRoute);
                     },
                     child: const Text(
-                      "Back to login",
+                      "برگشت",
                     ),
                   )
                 ],

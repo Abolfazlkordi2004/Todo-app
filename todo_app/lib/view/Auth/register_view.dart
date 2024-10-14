@@ -51,75 +51,84 @@ class _RegisterViewState extends State<RegisterView> {
                   children: [
                     heightSizedBox(10),
                     Text(
-                      'Sign Up',
+                      'ثبت نام',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 2.5 * Responsive().textConfige,
                           color: Colors.blue.shade900),
                     ),
                     heightSizedBox(5),
-                    TextField(
-                      controller: _userName,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                      ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.name,
-                    ),
-                    heightSizedBox(3),
-                    TextField(
-                      controller: _email,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                      ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    heightSizedBox(3),
-                    TextField(
-                      controller: _password,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            _passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _userName,
+                        decoration: InputDecoration(
+                          labelText: 'نام کاربری',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
                           ),
                         ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.name,
                       ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: !_passwordVisible,
+                    ),
+                    heightSizedBox(3),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _email,
+                        decoration: InputDecoration(
+                          labelText: 'ایمیل',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                        ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
+                    heightSizedBox(3),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _password,
+                        decoration: InputDecoration(
+                          labelText: 'رمز عبور',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: !_passwordVisible,
+                      ),
                     ),
                     heightSizedBox(5),
                     SizedBox(
@@ -142,16 +151,18 @@ class _RegisterViewState extends State<RegisterView> {
                             );
                           } on WeakPasswordAuthExceptions {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Weak password');
+                            showErrordialog(
+                                context, 'رمز عبور وارد شده ضعیف است');
                           } on InvalidEmailAuthExceptions {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Invalid email');
+                            showErrordialog(context, 'ایمیل وارد شده غلط است');
                           } on EmailAlreadyInUseAuthExceptions {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Email already in use');
+                            showErrordialog(
+                                context, 'ایمیل قبلا استفاده شده است');
                           } on GenericAuthExceptions {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Unknown error');
+                            showErrordialog(context, 'خطا');
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -165,7 +176,7 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         child: const Text(
-                          'Register',
+                          'ثبت نام',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -179,7 +190,7 @@ class _RegisterViewState extends State<RegisterView> {
                         );
                       },
                       child: const Text(
-                        "Already have an account? Login here",
+                        "ایا حساب کاربری دارید؟ ورود",
                       ),
                     ),
                   ],

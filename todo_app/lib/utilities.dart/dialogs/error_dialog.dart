@@ -5,7 +5,7 @@ Future<void> showErrordialog(BuildContext context, String text) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text('Error'),
+        title: const Text('خطا'),
         content: Text(text),
         actions: [
           TextButton(
@@ -13,7 +13,7 @@ Future<void> showErrordialog(BuildContext context, String text) {
               Navigator.of(context).pop();
             },
             child: const Text(
-              'Ok',
+              'تایید',
               textAlign: TextAlign.center,
             ),
           )

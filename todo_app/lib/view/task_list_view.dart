@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/Responsive/responsive.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/helper/function.dart';
 import 'package:todo_app/helper/space.dart';
-import 'package:todo_app/view/create_task_view.dart';
+import 'package:todo_app/services/Bloc/task_bloc.dart';
+import 'package:todo_app/services/Bloc/task_event_bloc.dart';
+import 'package:todo_app/view/create_update_task_view.dart';
 
 class TaskListView extends StatefulWidget {
   final List<List<String>> tasks;
@@ -23,7 +26,7 @@ class _TaskListViewState extends State<TaskListView> {
 
   @override
   void didUpdateWidget(covariant TaskListView oldWidget) {
-    if (oldWidget.tasks.length == widget.tasks.length) {
+    if (oldWidget.tasks.length != widget.tasks.length) {
       checkedvalue = List.filled(widget.tasks.length, false);
     }
     super.didUpdateWidget(oldWidget);
@@ -34,9 +37,9 @@ class _TaskListViewState extends State<TaskListView> {
     super.initState();
     _searchBox = TextEditingController();
     checkedvalue = List.filled(widget.tasks.length, false);
-    filteredTask = widget.tasks;
+    filteredTask = List.from(widget.tasks);
     _searchBox.addListener(_onSearchChanged);
-    _taskServices=TaskServices();
+    _taskServices = TaskServices();
   }
 
   @override
@@ -47,19 +50,29 @@ class _TaskListViewState extends State<TaskListView> {
   }
 
   void _onSearchChanged() {
-    setState(
-      () {
-        if (_searchBox.text.isEmpty) {
-          filteredTask = widget.tasks;
-        } else {
-          String searchText = _searchBox.text.toLowerCase();
-          filteredTask = widget.tasks
-              .where(
-                (task) => task[0].toLowerCase().contains(searchText),
-              )
-              .toList();
-        }
-      },
+    setState(() {
+      if (_searchBox.text.isEmpty) {
+        filteredTask = List.from(widget.tasks);
+      } else {
+        String searchText = _searchBox.text.toLowerCase();
+        filteredTask = widget.tasks
+            .where((task) => task[0].toLowerCase().contains(searchText))
+            .toList();
+      }
+    });
+  }
+
+  void editTask(String title, String text, String time, String date) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreateTaskView(
+          taskServices: context.read<TaskBloc>().taskServices,
+          title: title,
+          taskText: text,
+          time: time,
+          date: date,
+        ),
+      ),
     );
   }
 
@@ -72,21 +85,24 @@ class _TaskListViewState extends State<TaskListView> {
           children: [
             Padding(
               padding: EdgeInsets.all(3.5 * Responsive().widthConfige),
-              child: TextField(
-                controller: _searchBox,
-                decoration: InputDecoration(
-                  hintText: 'Search here...',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(width: 1.5),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: _onSearchChanged,
-                    icon: const Icon(Icons.search),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextField(
+                  controller: _searchBox,
+                  decoration: InputDecoration(
+                    hintText: 'جستجو کنید ',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(width: 1.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(width: 1.5),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: _onSearchChanged,
+                      icon: const Icon(Icons.search),
+                    ),
                   ),
                 ),
               ),
@@ -97,48 +113,38 @@ class _TaskListViewState extends State<TaskListView> {
                 itemBuilder: (context, index) {
                   var task = filteredTask[index];
                   return GestureDetector(
-                    onLongPress: () async {
-                      var updateTask = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return CreateTaskView(
-                              taskServices: TaskServices(),
-                              title: task[0],
-                              taskText: task[1],
-                              time: task[2],
-                              date: task[3],
-                            );
-                          },
-                        ),
-                      );
-                      if (updateTask != null) {
-                        setState(() {
-                          widget.tasks[index] = updateTask;
-                        });
-                      }
+                    onLongPress: () {
+                      editTask(task[0], task[1], task[2], task[3]);
                     },
                     child: Dismissible(
-                      key: Key(task[0]),
+                      key: UniqueKey(),
                       background: swipeRightBackground(),
                       secondaryBackground: swipeLeftBackground(),
                       onDismissed: (direction) {
                         final removedTask = widget.tasks[index];
-                        setState(
-                          () {
-                            widget.tasks.removeAt(index);
-                            _taskServices.removeTasks(removedTask);
-                          },
-                        );
+                        setState(() {
+                          BlocProvider.of<TaskBloc>(context)
+                              .add(RemoveTask(task));
+                          widget.tasks.removeAt(index);
+                          filteredTask.removeAt(index);
+                        });
+                        _taskServices.removeTasks(removedTask);
                         if (direction == DismissDirection.startToEnd) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("${removedTask[0]} completed"),
+                              content: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text("انجام شد ${removedTask[0]}"),
+                              ),
                             ),
                           );
                         } else if (direction == DismissDirection.endToStart) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("${removedTask[0]} deleted"),
+                              content: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text("حذف شد ${removedTask[0]}"),
+                              ),
                             ),
                           );
                         }
@@ -154,18 +160,17 @@ class _TaskListViewState extends State<TaskListView> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(
-                                      3 * Responsive().widthConfige,
-                                      3 * Responsive().heightConfige,
-                                      0,
-                                      0),
+                                    0,
+                                    4 * Responsive().widthConfige,
+                                    4 * Responsive().widthConfige,
+                                    0,
+                                  ),
                                   child: Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.centerRight,
                                     child: Text(
                                       '${task[0][0].toUpperCase()}${task[0].substring(1)}',
                                       style: TextStyle(
-                                        // fontWeight: FontWeight.bold,
-                                        fontSize:
-                                            1.7 * Responsive().textConfige,
+                                        fontSize: 2 * Responsive().textConfige,
                                       ),
                                     ),
                                   ),
@@ -173,9 +178,13 @@ class _TaskListViewState extends State<TaskListView> {
                                 heightSizedBox(1),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(
-                                      3.0 * Responsive().widthConfige, 0, 0, 0),
+                                    0,
+                                    0,
+                                    4 * Responsive().widthConfige,
+                                    0,
+                                  ),
                                   child: Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.centerRight,
                                     child: Text(task[1]),
                                   ),
                                 ),
@@ -185,7 +194,7 @@ class _TaskListViewState extends State<TaskListView> {
                                   child: Text(
                                     task[2],
                                     style: TextStyle(
-                                      fontSize: 1.4 * Responsive().textConfige,
+                                      fontSize: 1.7 * Responsive().textConfige,
                                     ),
                                   ),
                                 ),
@@ -195,7 +204,7 @@ class _TaskListViewState extends State<TaskListView> {
                                   child: Text(
                                     task[3],
                                     style: TextStyle(
-                                      fontSize: 1.4 * Responsive().textConfige,
+                                      fontSize: 1.7 * Responsive().textConfige,
                                     ),
                                   ),
                                 ),

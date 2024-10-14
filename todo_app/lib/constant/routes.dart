@@ -5,3 +5,5 @@ const forgotPasswordRoute = '/forgotPassword/';
 const homeRoute = '/home/';
 const profileRoute = '/profile/';
 const createTaskRoute = '/createTask/';
+const updateTaskRoute = '/updateTask/';
+

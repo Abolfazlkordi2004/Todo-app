@@ -16,7 +16,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final user = AuthService.firebase().currentUser;
-    final userEmail = user?.email ?? 'No user';
+    final userEmail = user?.email ?? 'کاربری یافت نشد ';
     final showUserName = userName;
 
     return LayoutBuilder(
@@ -27,7 +27,7 @@ class _ProfileViewState extends State<ProfileView> {
             padding: EdgeInsets.all(4 * Responsive().widthConfige),
             child: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   heightSizedBox(10),
                   Center(
@@ -55,15 +55,17 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   ),
                   heightSizedBox(5),
-                  // Email Section
-                  Text(
-                    'Your Email',
-                    style: TextStyle(
-                      fontSize: 1.6 * Responsive().textConfige,
-                      fontWeight: FontWeight.bold,
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      'ایمیل',
+                      style: TextStyle(
+                        fontSize: 1.6 * Responsive().textConfige,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  heightSizedBox(0.5),
+                  heightSizedBox(1),
                   Container(
                     height: 6 * Responsive().heightConfige,
                     padding: EdgeInsets.fromLTRB(
@@ -84,15 +86,17 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   ),
                   heightSizedBox(3),
-
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 1.6 * Responsive().textConfige,
-                      fontWeight: FontWeight.bold,
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      'رمز عبور',
+                      style: TextStyle(
+                        fontSize: 1.6 * Responsive().textConfige,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  heightSizedBox(0.5),
+                  heightSizedBox(1),
                   Container(
                     height: 6.0 * Responsive().heightConfige,
                     padding: EdgeInsets.fromLTRB(
@@ -121,7 +125,7 @@ class _ProfileViewState extends State<ProfileView> {
                         Navigator.of(context).pushNamed(homeRoute);
                       },
                       child: const Text(
-                        'Back to home',
+                        'برگشت',
                       ),
                     ),
                   ),

@@ -5,9 +5,9 @@ Future<void> showEmptyTextDialog(BuildContext context, String text) {
   return showgGenericsDialog(
     context: context,
     text: text,
-    title: 'Error',
+    title: 'خطا',
     optionBuilder: () => {
-      'Ok': Null,
+      'تایید': Null,
     },
   );
 }

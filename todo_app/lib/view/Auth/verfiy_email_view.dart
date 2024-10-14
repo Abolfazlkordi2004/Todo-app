@@ -18,7 +18,7 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
         Responsive().init(constraints: constraints);
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Verfiy Email'),
+            title: const Text('تایید ایمیل'),
             centerTitle: true,
           ),
           body: Center(
@@ -26,19 +26,25 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
               padding: EdgeInsets.all(1.6 * Responsive().widthConfige),
               child: Column(
                 children: [
-                  Text(
-                    "we ve' sent you an email verification.please open it to verify your account",
-                    style: TextStyle(
-                      fontSize: 1.5 * Responsive().textConfige,
-                      fontWeight: FontWeight.w400,
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      'ایمیل احراز هویت به ایمیل شما ارسال شده است لطفا ایمیل خود را چک کنید',
+                      style: TextStyle(
+                        fontSize: 1.5 * Responsive().textConfige,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   heightSizedBox(10),
-                  Text(
-                    "If you haven't received a verification email yet, press the button below",
-                    style: TextStyle(
-                      fontSize: 1.5 * Responsive().textConfige,
-                      fontWeight: FontWeight.w400,
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      'اگر ایمیل هنوز برای شما ارسال نشده است درخواست دوباره دهید',
+                      style: TextStyle(
+                        fontSize: 1.5 * Responsive().textConfige,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                   heightSizedBox(10),
@@ -50,7 +56,7 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
                         await AuthService.firebase().sendEmailVerification();
                       },
                       style: ElevatedButton.styleFrom(),
-                      child: const Text('send Email verfication'),
+                      child: const Text('فرستادن ایمیل'),
                     ),
                   ),
                   heightSizedBox(20),
@@ -61,7 +67,7 @@ class _VerfiyEmailViewState extends State<VerfiyEmailView> {
                       onPressed: () async {
                         await AuthService.firebase().logOut();
                       },
-                      child: const Text('restart'),
+                      child: const Text('برگشت'),
                     ),
                   )
                 ],

@@ -1,27 +1,33 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/class/task_services.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/firebase_options.dart';
+import 'package:todo_app/services/Bloc/task_bloc.dart';
+import 'package:todo_app/services/Bloc/task_state_bloc.dart';
 import 'package:todo_app/services/auth/auth_service.dart';
 import 'package:todo_app/theme/theme_mode.dart';
 import 'package:todo_app/theme/theme_notifer.dart';
-import 'package:todo_app/view/create_task_view.dart';
-import 'package:todo_app/view/forgot_password_view.dart';
+import 'package:todo_app/view/create_update_task_view.dart';
+import 'package:todo_app/view/Auth/forgot_password_view.dart';
 import 'package:todo_app/view/home_view.dart';
-import 'package:todo_app/view/login_view.dart';
+import 'package:todo_app/view/Auth/login_view.dart';
 import 'package:todo_app/view/profile_view.dart';
-import 'package:todo_app/view/register_view.dart';
-import 'package:todo_app/view/verfiy_email_view.dart';
+import 'package:todo_app/view/Auth/register_view.dart';
+import 'package:todo_app/view/Auth/verfiy_email_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
-      child: const MyApp(),
+    BlocProvider(
+      create: (context) => TaskBloc(TaskServices()),
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeNotifier(),
+        child: const MyApp(),
+      ),
     ),
   );
 }

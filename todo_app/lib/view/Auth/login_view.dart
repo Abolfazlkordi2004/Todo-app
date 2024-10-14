@@ -51,75 +51,84 @@ class _LoginView extends State<LoginView> {
                   children: [
                     heightSizedBox(10),
                     Text(
-                      'Sign in',
+                      'ورود',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 2.5 * Responsive().textConfige,
                           color: Colors.blue.shade900),
                     ),
                     heightSizedBox(5),
-                    TextField(
-                      controller: _userName, // Added the controller
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                      ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.name,
-                    ),
-                    heightSizedBox(3),
-                    TextField(
-                      controller: _email, // Added the controller
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                      ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    heightSizedBox(3),
-                    TextField(
-                      controller: _password, // Added the controller
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(width: 1.5),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            _passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _userName, // Added the controller
+                        decoration: InputDecoration(
+                          labelText: 'نام کاربری',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
                           ),
                         ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.name,
                       ),
-                      autocorrect: false,
-                      keyboardType: TextInputType.visiblePassword,
-                      obscureText: !_passwordVisible,
+                    ),
+                    heightSizedBox(3),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _email, // Added the controller
+                        decoration: InputDecoration(
+                          labelText: ' ایمیل',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                        ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
+                    heightSizedBox(3),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: _password, // Added the controller
+                        decoration: InputDecoration(
+                          labelText: 'رمز عبور',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(width: 1.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(width: 1.5),
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                        autocorrect: false,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: !_passwordVisible,
+                      ),
                     ),
                     heightSizedBox(5),
                     SizedBox(
@@ -142,13 +151,14 @@ class _LoginView extends State<LoginView> {
                             );
                           } on WrongPasswordAuthException {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Wrong password');
+                            showErrordialog(
+                                context, 'رمز عبور وارد شده غلط است ');
                           } on UserNotFoundAuthException {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'User not found');
+                            showErrordialog(context, 'کاربر یافت نشد');
                           } on GenericAuthExceptions {
                             // ignore: use_build_context_synchronously
-                            showErrordialog(context, 'Unknown error');
+                            showErrordialog(context, 'خطا');
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -162,7 +172,7 @@ class _LoginView extends State<LoginView> {
                           ),
                         ),
                         child: const Text(
-                          'Login',
+                          'ورود',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -176,7 +186,7 @@ class _LoginView extends State<LoginView> {
                         );
                       },
                       child: const Text(
-                        "Forgot password",
+                        "فراموشی رمز عبور",
                       ),
                     ),
                     TextButton(
@@ -187,7 +197,7 @@ class _LoginView extends State<LoginView> {
                         );
                       },
                       child: const Text(
-                        "Do not have account? Register here",
+                        "ایا حساب کاربری ندارید؟ ثبت نام ",
                       ),
                     ),
                   ],
