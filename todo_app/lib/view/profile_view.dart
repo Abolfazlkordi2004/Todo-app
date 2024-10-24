@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/Responsive/responsive.dart';
+import 'package:todo_app/class/user_info.dart' as userinfo;
 import 'package:todo_app/constant/routes.dart';
-import 'package:todo_app/constant/username.dart';
+import 'package:todo_app/helper/Function/get_username.dart';
 import 'package:todo_app/helper/space.dart';
-import 'package:todo_app/services/auth/auth_service.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -13,12 +13,32 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  String? user;
+  String? phoneNumber;
+  String? password;
+  bool isLoading = true;
+  bool passwordVisible = false;
+
+  @override
+  void initState() {
+    _loadUserInfo();
+    super.initState();
+  }
+
+  Future<void> _loadUserInfo() async {
+    await loadUserInfo();
+    setState(() {
+      user = userinfo.UserInfo().userName;
+      password = userinfo.UserInfo().password;
+      phoneNumber = userinfo.UserInfo().phoneNumber;
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = AuthService.firebase().currentUser;
-    final userEmail = user?.email ?? 'کاربری یافت نشد ';
-    final showUserName = userName;
-
+    // final user = AuthService.firebase().currentUser;
+    // final userEmail = user?.email ?? 'کاربری یافت نشد ';
     return LayoutBuilder(
       builder: (context, constraints) {
         Responsive().init(constraints: constraints);
@@ -47,10 +67,10 @@ class _ProfileViewState extends State<ProfileView> {
                   heightSizedBox(2),
                   Center(
                     child: Text(
-                      showUserName,
+                      user != null && user!.isNotEmpty ? user! : ' ',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         fontSize: 2.0 * Responsive().textConfige,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -58,7 +78,7 @@ class _ProfileViewState extends State<ProfileView> {
                   Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
-                      'ایمیل',
+                      'شماره همراه',
                       style: TextStyle(
                         fontSize: 1.6 * Responsive().textConfige,
                         fontWeight: FontWeight.bold,
@@ -79,9 +99,13 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.email),
+                        const Icon(Icons.phone),
                         widthSizedBox(1),
-                        Text(userEmail),
+                        Text(
+                          phoneNumber != null && phoneNumber!.isNotEmpty
+                              ? phoneNumber!
+                              : '',
+                        ),
                       ],
                     ),
                   ),
@@ -109,16 +133,30 @@ class _ProfileViewState extends State<ProfileView> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const Icon(Icons.lock),
                         widthSizedBox(1),
-                        const Text('************'),
+                        Text(
+                          password != null && password!.isNotEmpty
+                              ? password!
+                              : '',
+                        ),
+                        widthSizedBox(57),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                          icon: passwordVisible
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off),
+                        )
                       ],
                     ),
                   ),
                   heightSizedBox(2),
-
-                  // Back to Home Button
                   Center(
                     child: TextButton(
                       onPressed: () {
