@@ -39,7 +39,7 @@ class LogoutEvent extends AuthEvent {
 }
 
 class ConfirmNumberEvent extends AuthEvent {
-  final int oTP;
+  final String oTP;
   const ConfirmNumberEvent({required this.oTP});
 }
 

@@ -41,6 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
           Authentication().isRegistered = true;
           emit(RegisteringState(exception: AccountCreatedSuccessfully()));
+          emit(const ConfirmNumberState());
         } on Exception catch (e) {
           emit(RegisteringState(exception: e));
         }

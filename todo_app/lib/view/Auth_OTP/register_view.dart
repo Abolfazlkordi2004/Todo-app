@@ -10,6 +10,7 @@ import 'package:todo_app/services/bloc/Auth_bloc/auth_bloc.dart';
 import 'package:todo_app/services/bloc/Auth_bloc/auth_event.dart';
 import 'package:todo_app/services/bloc/Auth_bloc/auth_state.dart';
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
+import 'dart:developer' as devlog;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -65,7 +66,7 @@ class _RegisterViewState extends State<RegisterView> {
 
       String code = OtpServices.generateVerificationCode();
       OtpServices().sendVerificationSMS(context, code, _phoneNumber.text);
-      print(code);
+      devlog.log(code);
     } on FillAllTextFiledsAuthExceptions {
       showErrordialog(context, 'لطفا همه فیلدها را پر کنید.');
     } on WrongPasswordAuthExceptions {
@@ -86,8 +87,10 @@ class _RegisterViewState extends State<RegisterView> {
           listener: (context, state) {
             if (state.isLoading) {
               LoadingScreen().show(context: context, text: 'لطفا صبر کنید');
-            } else if (State is HomeState) {
-              Navigator.of(context).pushReplacementNamed(homeRoute);
+            } else if (state is ConfirmNumberState) {
+              Navigator.of(context).pushNamed(verfiyPhonenumberRoute);
+            } else if (state is HomeState) {
+              Navigator.of(context).pushNamed(homeRoute);
             } else {
               LoadingScreen().hide();
             }

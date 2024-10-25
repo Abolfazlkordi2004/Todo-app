@@ -5,7 +5,7 @@ class UserInfo {
   String? phoneNumber;
   String? password;
 
-  UserInfo._internal(); // private constructor
+  UserInfo._internal(); 
 
   factory UserInfo() {
     return _instance;

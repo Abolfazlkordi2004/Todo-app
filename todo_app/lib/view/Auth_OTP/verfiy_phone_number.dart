@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/Error/auth_exception.dart';
 import 'package:todo_app/Responsive/responsive.dart';
+import 'package:todo_app/class/otp_service.dart';
 import 'package:todo_app/constant/routes.dart';
 import 'package:todo_app/helper/loading/loading_screen.dart';
 import 'package:todo_app/helper/space.dart';
@@ -8,6 +10,8 @@ import 'package:todo_app/services/bloc/Auth_bloc/auth_bloc.dart';
 import 'package:todo_app/services/bloc/Auth_bloc/auth_event.dart';
 import 'package:todo_app/services/bloc/Auth_bloc/auth_state.dart';
 import 'package:todo_app/utilities.dart/dialogs/empty_create_view_dialog.dart';
+import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
+import 'dart:developer' as devlog;
 
 class VerfiyPhonenumber extends StatefulWidget {
   final String verificationCode;
@@ -26,21 +30,11 @@ class _VerfiyPhonenumberState extends State<VerfiyPhonenumber> {
 
   void _verifyCode() {
     if (_verificationCodeController.text.isEmpty) {
-      showEmptyTextDialog(context, 'لطفا کد تایید را وارد کنید');
-      return;
-    }
-
-    if (_verificationCodeController.text == widget.verificationCode) {
-      context.read<AuthBloc>().add(const HomeEvent());
+      showEmptyTextDialog(context, 'لطفا کد تایید را وارد کنید ');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Text('کد نادرست است'),
-          ),
-        ),
-      );
+      context
+          .read<AuthBloc>()
+          .add(ConfirmNumberEvent(oTP: _verificationCodeController.text));
     }
   }
 
@@ -56,6 +50,9 @@ class _VerfiyPhonenumberState extends State<VerfiyPhonenumber> {
           Navigator.of(context).pushReplacementNamed(registerRoute);
         } else if (state is HomeState) {
           Navigator.of(context).pushReplacementNamed(homeRoute);
+        } else if (state is ConfirmNumberState &&
+            state.exception is WrongOTPException) {
+          showErrordialog(context, 'کد تایید نادرست است');
         } else {
           LoadingScreen().hide();
         }
@@ -113,7 +110,10 @@ class _VerfiyPhonenumberState extends State<VerfiyPhonenumber> {
                               phoneNumber: widget.number,
                             ),
                           );
-                      print(widget.verificationCode);
+                      String code = OtpServices.generateVerificationCode();
+                      OtpServices()
+                          .sendVerificationSMS(context, code, widget.number);
+                      devlog.log(code);
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
