@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/class/authentication.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_app/utilities.dart/dialogs/error_dialog.dart';
-import 'dart:developer' as devlog;
 
 class OtpServices {
   Future<void> sendVerificationSMS(
@@ -14,8 +13,8 @@ class OtpServices {
 
     // داده‌هایی که باید به سرور ارسال شوند
     Map<String, dynamic> data = {
-      'from': '9850002710011083',
-      'to': number,
+      'from': '50002710011083',
+      'to':number,
       'text': 'کاربر گرامی کد تایید شما $verificationCode می باشد ',
     };
 
@@ -43,7 +42,6 @@ class OtpServices {
         }
       } else {
         if (context.mounted) {
-          print(response.statusCode);
           showErrordialog(context, 'خطا در ارسال پیامک ');
         }
       }
