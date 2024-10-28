@@ -24,6 +24,7 @@ class _RegisterViewState extends State<RegisterView> {
   late TextEditingController _phoneNumber;
   late TextEditingController _password;
   bool _passwordVisible = false;
+  bool _isPrivacyPolicyAccepted = false;
 
   @override
   void initState() {
@@ -55,6 +56,9 @@ class _RegisterViewState extends State<RegisterView> {
           _phoneNumber.text.length != 11) {
         throw WrongNumberAuthExceptions();
       }
+      if (_isPrivacyPolicyAccepted == false) {
+        throw PrivacyException();
+      }
 
       context.read<AuthBloc>().add(
             RegisterEvent(
@@ -73,6 +77,9 @@ class _RegisterViewState extends State<RegisterView> {
       showErrordialog(context, 'رمز عبور باید حداقل ۶ کاراکتر باشد.');
     } on WrongNumberAuthExceptions {
       showErrordialog(context, 'شماره موبایل وارد شده معتبر نیست.');
+    } on PrivacyException {
+      showErrordialog(
+          context, 'شرایط استفاده از خدمات و حریم خصوصی را بپذیرید');
     } catch (e) {
       showErrordialog(context, 'خطای نامشخص: $e');
     }
@@ -152,6 +159,24 @@ class _RegisterViewState extends State<RegisterView> {
                             );
                           },
                           child: const Text("ایا حساب کاربری دارید؟ ورود"),
+                        ),
+                        heightSizedBox(5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'شرایط استفاده از خدمات و حریم خصوصی را می‌پذیریم',
+                              textDirection: TextDirection.rtl,
+                            ),
+                            Checkbox(
+                              value: _isPrivacyPolicyAccepted,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isPrivacyPolicyAccepted = value!;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),

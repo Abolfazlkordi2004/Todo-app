@@ -11,3 +11,5 @@ class GenericAuthExceptions implements Exception {}
 class AccountCreatedSuccessfully implements Exception {}
 
 class UserShouldRegisterException implements Exception {}
+
+class PrivacyException implements Exception{}
