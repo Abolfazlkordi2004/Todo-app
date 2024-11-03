@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/Error/auth_exception.dart';
@@ -131,9 +132,11 @@ class _RegisterViewState extends State<RegisterView> {
                           height: 5.5 * Responsive().heightConfige,
                           width: 90 * Responsive().widthConfige,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              _registerUser();
-                            },
+                            onPressed: _isPrivacyPolicyAccepted
+                                ? () async {
+                                    _registerUser();
+                                  }
+                                : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue.shade800,
                               textStyle: TextStyle(
@@ -161,22 +164,45 @@ class _RegisterViewState extends State<RegisterView> {
                           child: const Text("ایا حساب کاربری دارید؟ ورود"),
                         ),
                         heightSizedBox(5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'شرایط استفاده از خدمات و حریم خصوصی را می‌پذیریم',
-                              textDirection: TextDirection.rtl,
-                            ),
-                            Checkbox(
-                              value: _isPrivacyPolicyAccepted,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isPrivacyPolicyAccepted = value!;
-                                });
-                              },
-                            ),
-                          ],
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: _isPrivacyPolicyAccepted,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isPrivacyPolicyAccepted = value!;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: 'شرایط استفاده از خدمات و ',
+                                    children: [
+                                      TextSpan(
+                                        text: 'سیاست حریم خصوصی',
+                                        style: const TextStyle(
+                                            color: Colors
+                                                .deepPurple), // رنگ برای تاکید روی لینک
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.of(context)
+                                                .pushNamed(PrivacyRoute);
+                                          },
+                                      ),
+                                      const TextSpan(
+                                        text: ' را می‌پذیرم',
+                                      ),
+                                    ],
+                                  ),
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

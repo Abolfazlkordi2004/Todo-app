@@ -16,6 +16,7 @@ import 'package:todo_app/view/Auth_OTP/register_view.dart';
 import 'package:todo_app/view/Auth_OTP/verfiy_phone_number.dart';
 import 'package:todo_app/view/create_task_view.dart';
 import 'package:todo_app/view/home_view.dart';
+import 'package:todo_app/view/privacy_view.dart';
 import 'package:todo_app/view/profile_view.dart';
 import 'package:todo_app/view/update_task_view.dart';
 
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
                     ),
                 updateTaskRoute: (context) =>
                     UpdateTaskView(taskServices: TaskServices()),
+                PrivacyRoute: (context) => const PrivacyView()
               },
             );
           },
